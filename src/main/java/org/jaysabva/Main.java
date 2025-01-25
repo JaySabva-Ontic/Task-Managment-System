@@ -46,21 +46,61 @@ public class Main {
 
         List<Task> tasks = new ArrayList<>();
         while (true) {
-            System.out.println("Enter 1 to create a bug task, 2 to create a feature task, 3 to create an improvement task, 4 to view tasks, 5 to exit: ");
+            System.out.println("1 - Create Task\n" +
+                    "2 - Update Task\n" +
+                    "3 - Delete Task\n" +
+                    "4 - View Task\n" +
+                    " 5 - View All Tasks");
             int option = Integer.parseInt(scanner.nextLine());
+            if (option ==  1) {
+                System.out.println("1 - Bug Task\n" +
+                        "2 - Feature Task\n" +
+                        "3 - Improvment Task");
+                option = Integer.parseInt(scanner.nextLine());
 
-            if (option == 1) {
-                tasks.add(createBugTask(scanner));
+                if (option == 1) {
+                    tasks.add(createBugTask(scanner));
+                } else if (option == 2) {
+                    tasks.add(createFeatureTask(scanner));
+                } else if (option == 3) {
+                    tasks.add(createImprovementTask(scanner));
+                }
             } else if (option == 2) {
-                tasks.add(createFeatureTask(scanner));
+                System.out.println("Enter Task ID to update: ");
+                int taskId = Integer.parseInt(scanner.nextLine());
+
+                for (Task task : tasks) {
+                    if (task.getId() == taskId) {
+                        updateTask(task, scanner);
+                        break;
+                    }
+                }
             } else if (option == 3) {
-                tasks.add(createImprovementTask(scanner));
+                System.out.println("Enter Task ID to delete: ");
+                int taskId = Integer.parseInt(scanner.nextLine());
+
+                for (Task task : tasks) {
+                    if (task.getId() == taskId) {
+                        tasks.remove(task);
+                        break;
+                    }
+                }
+
+                System.out.println("Task deleted successfully!");
             } else if (option == 4) {
+                System.out.println("Enter Task ID to view: ");
+                int taskId = Integer.parseInt(scanner.nextLine());
+
+                for (Task task : tasks) {
+                    if (task.getId() == taskId) {
+                        task.viewTask();
+                        break;
+                    }
+                }
+            } else if (option == 5) {
                 for (Task task : tasks) {
                     task.viewTask();
                 }
-            } else if (option == 5) {
-                System.exit(0);
             }
         }
     }
@@ -86,6 +126,7 @@ public class Main {
 
         return user;
     }
+
     private static User login(List<User> users, Scanner scanner) {
         System.out.println("Enter your username: ");
         String userName = scanner.nextLine();
@@ -217,5 +258,33 @@ public class Main {
         improvementTask.setProposedImprovement(scanner.nextLine());
 
         return improvementTask;
+    }
+
+    private static void updateTask(Task task, Scanner scanner) {
+        System.out.println("Enter title: ");
+        task.setTitle(scanner.nextLine());
+
+        System.out.println("Enter description");
+        task.setDescription(scanner.nextLine());
+
+        System.out.println("Enter status: ");
+        task.setStatus(scanner.nextLine());
+
+        System.out.println("Enter due date: ");
+        task.setDueDate(scanner.nextLine());
+
+        System.out.println("Enter created at: ");
+        task.setCreatedAt(scanner.nextLine());
+
+        System.out.println("Enter updated at: ");
+        task.setUpdatedAt(scanner.nextLine());
+
+        System.out.println("Enter assignee: ");
+        task.setAssignee(scanner.nextLine());
+
+        System.out.println("Enter created by: ");
+        task.setCreatedBy(scanner.nextLine());
+
+        System.out.println("Task updated successfully!");
     }
 }
