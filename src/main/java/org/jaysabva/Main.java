@@ -12,11 +12,7 @@ public class Main {
 
         User loggedInUser = null;
         while (true) {
-//            System.out.println("Enter 1 to login, 2 to exit: ");
-//            int option = scanner.nextInt();
-//            scanner.nextLine();
-//
-//            if (option == 1) {
+            try {
                 loggedInUser = login(users, scanner);
                 if (loggedInUser != null) {
                     System.out.println("Login successful!");
@@ -24,110 +20,157 @@ public class Main {
                 } else {
                     System.out.println("Login failed! Retry.");
                 }
-//            } else if (option == 2) {
-//                System.exit(0);
-//            }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid option.");
+                scanner.nextLine();
+            }
         }
 
-        if (loggedInUser.getRole().equals("admin")) {
+        if (loggedInUser != null && loggedInUser.getRole().equals("admin")) {
             while (true) {
-                System.out.print("Enter * to create a user, 2 to exit: ");
-                char option = scanner.next().charAt(0);
-                scanner.nextLine();
+                try {
+                    System.out.print("Enter 1 to create a user, 2 to exit: ");
+                    int option = Integer.parseInt(scanner.nextLine());
+                    scanner.nextLine();
 
-                if (option == '*') {
-                    System.out.println(createUser(scanner, (long) users.size() + 1));
-                } else if (option == '2') {
-                    System.exit(0);
-                    break;
+                    if (option == 1) {
+                        System.out.println(createUser(scanner, (long) users.size() + 1));
+                    } else if (option == 2) {
+                        System.exit(0);
+                    } else {
+                        System.out.println("Invalid option. Please try again.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a valid option.");
+                    scanner.nextLine();
                 }
             }
         }
 
         List<Task> tasks = new ArrayList<>();
         while (true) {
-            System.out.println("1 - Create Task\n" +
-                    "2 - Update Task\n" +
-                    "3 - Delete Task\n" +
-                    "4 - View Task\n" +
-                    " 5 - View All Tasks");
-            int option = Integer.parseInt(scanner.nextLine());
-            if (option ==  1) {
-                System.out.println("1 - Bug Task\n" +
-                        "2 - Feature Task\n" +
-                        "3 - Improvment Task");
-                option = Integer.parseInt(scanner.nextLine());
+            try {
+                System.out.println("1 - Create Task\n" +
+                        "2 - Update Task\n" +
+                        "3 - Delete Task\n" +
+                        "4 - View Task\n" +
+                        "5 - View All Tasks");
+                int option = Integer.parseInt(scanner.nextLine());
 
-                if (option == 1) {
-                    tasks.add(createBugTask(scanner));
-                } else if (option == 2) {
-                    tasks.add(createFeatureTask(scanner));
-                } else if (option == 3) {
-                    tasks.add(createImprovementTask(scanner));
-                }
-            } else if (option == 2) {
-                System.out.println("Enter Task ID to update: ");
-                int taskId = Integer.parseInt(scanner.nextLine());
+                switch (option) {
+                    case 1:
+                        System.out.println("1 - Bug Task\n" +
+                                "2 - Feature Task\n" +
+                                "3 - Improvement Task");
+                        option = Integer.parseInt(scanner.nextLine());
 
-                for (Task task : tasks) {
-                    if (task.getId() == taskId) {
-                        updateTask(task, scanner);
+                        switch (option) {
+                            case 1:
+                                tasks.add(createBugTask(scanner));
+                                break;
+                            case 2:
+                                tasks.add(createFeatureTask(scanner));
+                                break;
+                            case 3:
+                                tasks.add(createImprovementTask(scanner));
+                                break;
+                            default:
+                                System.out.println("Invalid task type. Please try again.");
+                        }
                         break;
-                    }
-                }
-            } else if (option == 3) {
-                System.out.println("Enter Task ID to delete: ");
-                int taskId = Integer.parseInt(scanner.nextLine());
+                    case 2:
+                        System.out.println("Enter Task ID to update: ");
+                        int taskId = Integer.parseInt(scanner.nextLine());
 
-                for (Task task : tasks) {
-                    if (task.getId() == taskId) {
-                        tasks.remove(task);
+                        Task taskToUpdate = null;
+                        for (Task task : tasks) {
+                            if (task.getId() == taskId) {
+                                taskToUpdate = task;
+                                break;
+                            }
+                        }
+
+                        if (taskToUpdate != null) {
+                            updateTask(taskToUpdate, scanner);
+                        } else {
+                            System.out.println("Task with ID " + taskId + " not found.");
+                        }
                         break;
-                    }
-                }
+                    case 3:
+                        System.out.println("Enter Task ID to delete: ");
+                        taskId = Integer.parseInt(scanner.nextLine());
 
-                System.out.println("Task deleted successfully!");
-            } else if (option == 4) {
-                System.out.println("Enter Task ID to view: ");
-                int taskId = Integer.parseInt(scanner.nextLine());
+                        Task taskToDelete = null;
+                        for (Task task : tasks) {
+                            if (task.getId() == taskId) {
+                                taskToDelete = task;
+                                break;
+                            }
+                        }
 
-                for (Task task : tasks) {
-                    if (task.getId() == taskId) {
-                        task.viewTask();
+                        if (taskToDelete != null) {
+                            tasks.remove(taskToDelete);
+                            System.out.println("Task deleted successfully!");
+                        } else {
+                            System.out.println("Task with ID " + taskId + " not found.");
+                        }
                         break;
-                    }
+                    case 4:
+                        System.out.println("Enter Task ID to view: ");
+                        taskId = Integer.parseInt(scanner.nextLine());
+
+                        Task taskToView = null;
+                        for (Task task : tasks) {
+                            if (task.getId() == taskId) {
+                                taskToView = task;
+                                break;
+                            }
+                        }
+
+                        if (taskToView != null) {
+                            taskToView.viewTask();
+                        } else {
+                            System.out.println("Task with ID " + taskId + " not found.");
+                        }
+                        break;
+                    case 5:
+                        if (tasks.isEmpty()) {
+                            System.out.println("No tasks available.");
+                        } else {
+                            for (Task task : tasks) {
+                                task.viewTask();
+                            }
+                        }
+                        break;
+                    default:
+                        System.out.println("Invalid option. Please select a valid option.");
                 }
-            } else if (option == 5) {
-                for (Task task : tasks) {
-                    task.viewTask();
-                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine();
             }
         }
     }
 
     private static User createAdmin() {
         User admin = new User();
-
         admin.setUserId(1L);
         admin.setUserName("admin");
         admin.setPassword("admin");
         admin.setRole("admin");
-
         return admin;
     }
 
     private static User createUser() {
         User user = new User();
-
         user.setUserId(2L);
         user.setUserName("user");
         user.setPassword("user");
         user.setRole("user");
-
         return user;
     }
 
-    private static User login(List<User> users, Scanner scanner) {
+    private static User login(List<User> users, Scanner scanner) throws InputMismatchException {
         System.out.println("Enter your username: ");
         String userName = scanner.nextLine();
 
@@ -143,13 +186,11 @@ public class Main {
                 return user;
             }
         }
-
         return null;
     }
 
     private static String createUser(Scanner scanner, Long userId) {
         User user = new User();
-
         user.setUserId(userId);
 
         System.out.println("Enter username: ");
@@ -196,7 +237,6 @@ public class Main {
 
     private static BugTask createBugTask(Scanner scanner) {
         BugTask bugTask = new BugTask();
-
         Map<String, String> task = createTask(scanner);
         bugTask.setTitle(task.get("title"));
         bugTask.setDescription(task.get("description"));
