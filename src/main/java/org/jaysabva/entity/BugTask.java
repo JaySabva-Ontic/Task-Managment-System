@@ -1,6 +1,6 @@
-package org.jaysabva;
+package org.jaysabva.entity;
 
-public class BugTask extends Task{
+public class BugTask extends Task {
     private String severity;
     private String stepToReproduce;
 

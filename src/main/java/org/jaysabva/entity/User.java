@@ -1,6 +1,7 @@
-package org.jaysabva;
+package org.jaysabva.entity;
 
 public class User {
+    private static Long id = 1L;
     private Long userId;
     private String userName;
     private String password;
@@ -9,11 +10,27 @@ public class User {
     public User() {
     }
 
-    public User(Long userId, String userName, String password, String role) {
-        this.userId = userId;
+    public User(String userName, String password, String role) {
+        this.userId = id;
         this.userName = userName;
         this.password = password;
         this.role = role;
+
+        incrId();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+
+    private static void incrId() {
+        id++;
     }
 
     public Long getUserId() {

@@ -1,4 +1,4 @@
-package org.jaysabva;
+package org.jaysabva.entity;
 
 public class ImprovementTask extends Task {
     private String currentState;

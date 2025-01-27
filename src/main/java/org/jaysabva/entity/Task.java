@@ -1,4 +1,4 @@
-package org.jaysabva;
+package org.jaysabva.entity;
 
 public abstract class Task {
     private static Long taskId = 1L;

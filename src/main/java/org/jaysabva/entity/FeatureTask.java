@@ -1,4 +1,4 @@
-package org.jaysabva;
+package org.jaysabva.entity;
 
 public class FeatureTask extends Task {
     private String featureDescription;
