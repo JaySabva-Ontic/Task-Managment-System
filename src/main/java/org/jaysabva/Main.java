@@ -1,5 +1,7 @@
 package org.jaysabva;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Main {
@@ -127,13 +129,13 @@ public class Main {
 
                             switch (option) {
                                 case 1:
-                                    tasks.add(createBugTask(scanner));
+                                    tasks.add(createBugTask(scanner, loggedInUser.getUserName()));
                                     break;
                                 case 2:
-                                    tasks.add(createFeatureTask(scanner));
+                                    tasks.add(createFeatureTask(scanner, loggedInUser.getUserName()));
                                     break;
                                 case 3:
-                                    tasks.add(createImprovementTask(scanner));
+                                    tasks.add(createImprovementTask(scanner, loggedInUser.getUserName()));
                                     break;
                                 default:
                                     System.out.println("Invalid task type. Please try again.");
@@ -302,7 +304,7 @@ public class Main {
         }
         return true;
     }
-    private static Map<String, String> createTask(Scanner scanner) {
+    private static Map<String, String> createTask(Scanner scanner, String username) {
         Map<String, String> task = new HashMap<>();
 
         System.out.println("Enter title: ");
@@ -317,24 +319,24 @@ public class Main {
         System.out.println("Enter due date: ");
         task.put("dueDate", scanner.nextLine());
 
-        System.out.println("Enter created at: ");
-        task.put("createdAt", scanner.nextLine());
+//        System.out.println("Enter created at: ");
+        task.put("createdAt", LocalDateTime.now().toString());
 
-        System.out.println("Enter updated at: ");
-        task.put("updatedAt", scanner.nextLine());
+//        System.out.println("Enter updated at: ");
+        task.put("updatedAt", LocalDateTime.now().toString());
 
         System.out.println("Enter assignee: ");
         task.put("assignee", scanner.nextLine());
 
-        System.out.println("Enter created by: ");
-        task.put("createdBy", scanner.nextLine());
+//        System.out.println("Enter created by: ");
+        task.put("createdBy", username);
 
         return task;
     }
 
-    private static BugTask createBugTask(Scanner scanner) {
+    private static BugTask createBugTask(Scanner scanner, String username) {
         BugTask bugTask = new BugTask();
-        Map<String, String> task = createTask(scanner);
+        Map<String, String> task = createTask(scanner, username);
         bugTask.setTitle(task.get("title"));
         bugTask.setDescription(task.get("description"));
         bugTask.setStatus(task.get("status"));
@@ -353,10 +355,10 @@ public class Main {
         return bugTask;
     }
 
-    private static FeatureTask createFeatureTask(Scanner scanner) {
+    private static FeatureTask createFeatureTask(Scanner scanner, String username) {
         FeatureTask featureTask = new FeatureTask();
 
-        Map<String, String> task = createTask(scanner);
+        Map<String, String> task = createTask(scanner, username);
         featureTask.setTitle(task.get("title"));
         featureTask.setDescription(task.get("description"));
         featureTask.setStatus(task.get("status"));
@@ -375,10 +377,10 @@ public class Main {
         return featureTask;
     }
 
-    private static ImprovementTask createImprovementTask(Scanner scanner) {
+    private static ImprovementTask createImprovementTask(Scanner scanner, String username) {
         ImprovementTask improvementTask = new ImprovementTask();
 
-        Map<String, String> task = createTask(scanner);
+        Map<String, String> task = createTask(scanner, username);
         improvementTask.setTitle(task.get("title"));
         improvementTask.setDescription(task.get("description"));
         improvementTask.setStatus(task.get("status"));
@@ -410,17 +412,17 @@ public class Main {
         System.out.println("Enter due date: ");
         task.setDueDate(scanner.nextLine());
 
-        System.out.println("Enter created at: ");
-        task.setCreatedAt(scanner.nextLine());
+//        System.out.println("Enter created at: ");
+//        task.setCreatedAt(scanner.nextLine());
 
-        System.out.println("Enter updated at: ");
-        task.setUpdatedAt(scanner.nextLine());
+//        System.out.println("Enter updated at: ");
+        task.setUpdatedAt(LocalDateTime.now().toString());
 
         System.out.println("Enter assignee: ");
         task.setAssignee(scanner.nextLine());
 
-        System.out.println("Enter created by: ");
-        task.setCreatedBy(scanner.nextLine());
+//        System.out.println("Enter created by: ");
+//        task.setCreatedBy(scanner.nextLine());
 
         System.out.println("Task updated successfully!");
     }
