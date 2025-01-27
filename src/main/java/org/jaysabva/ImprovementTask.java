@@ -1,33 +1,33 @@
 package org.jaysabva;
 
 public class ImprovementTask extends Task {
-    private String CurrentState;
-    private String ProposedImprovement;
+    private String currentState;
+    private String proposedImprovement;
 
     public ImprovementTask() {
         super();
     }
 
-    public ImprovementTask(String Title, String Description, String Status, String DueDate, String CreatedAt, String UpdatedAt, String Assignee, String CreatedBy, String CurrentState, String ProposedImprovment) {
-        super(Title, Description, Status, DueDate, CreatedAt, UpdatedAt, Assignee, CreatedBy);
-        this.CurrentState = CurrentState;
-        this.ProposedImprovement = ProposedImprovment;
+    public ImprovementTask(String title, String description, String status, String dueDate, String createdAt, String updatedAt, String assignee, String createdBy, String currentState, String proposedImprovement) {
+        super(title, description, status, dueDate, createdAt, updatedAt, assignee, createdBy);
+        this.currentState = currentState;
+        this.proposedImprovement = proposedImprovement;
     }
 
     public String getCurrentState() {
-        return CurrentState;
+        return currentState;
     }
 
     public void setCurrentState(String currentState) {
-        CurrentState = currentState;
+        this.currentState = currentState;
     }
 
     public String getProposedImprovement() {
-        return ProposedImprovement;
+        return proposedImprovement;
     }
 
     public void setProposedImprovement(String proposedImprovement) {
-        ProposedImprovement = proposedImprovement;
+        this.proposedImprovement = proposedImprovement;
     }
 
     public void viewTask() {

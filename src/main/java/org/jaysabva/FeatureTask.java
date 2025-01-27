@@ -1,33 +1,33 @@
 package org.jaysabva;
 
 public class FeatureTask extends Task {
-    private String FeatureDescription;
-    private String EstimatedEffort;
+    private String featureDescription;
+    private String estimatedEffort;
 
     public FeatureTask() {
         super();
     }
 
-    public FeatureTask(String Title, String Description, String Status, String DueDate, String CreatedAt, String UpdatedAt, String Assignee, String CreatedBy, String FeatureDescription, String EstimatedEffort) {
-        super(Title, Description, Status, DueDate, CreatedAt, UpdatedAt, Assignee, CreatedBy);
-        this.FeatureDescription = FeatureDescription;
-        this.EstimatedEffort = EstimatedEffort;
+    public FeatureTask(String title, String description, String status, String dueDate, String createdAt, String updatedAt, String assignee, String createdBy, String featureDescription, String estimatedEffort) {
+        super(title, description, status, dueDate, createdAt, updatedAt, assignee, createdBy);
+        this.featureDescription = featureDescription;
+        this.estimatedEffort = estimatedEffort;
     }
 
     public String getFeatureDescription() {
-        return FeatureDescription;
+        return featureDescription;
     }
 
     public void setFeatureDescription(String featureDescription) {
-        FeatureDescription = featureDescription;
+        this.featureDescription = featureDescription;
     }
 
     public String getEstimatedEffort() {
-        return EstimatedEffort;
+        return estimatedEffort;
     }
 
     public void setEstimatedEffort(String estimatedEffort) {
-        EstimatedEffort = estimatedEffort;
+        this.estimatedEffort = estimatedEffort;
     }
 
     @Override

@@ -1,50 +1,50 @@
 package org.jaysabva;
 
 public class User {
-    private Long UserId;
-    private String UserName;
-    private String Password;
-    private String Role;
+    private Long userId;
+    private String userName;
+    private String password;
+    private String role;
 
     public User() {
     }
 
-    public User(Long UserId, String UserName, String Password, String Role) {
-        this.UserId = UserId;
-        this.UserName = UserName;
-        this.Password = Password;
-        this.Role = Role;
+    public User(Long userId, String userName, String password, String role) {
+        this.userId = userId;
+        this.userName = userName;
+        this.password = password;
+        this.role = role;
     }
 
     public Long getUserId() {
-        return UserId;
+        return userId;
     }
 
-    public void setUserId(Long UserId) {
-        this.UserId = UserId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
-    public void setUserName(String UserName) {
-        this.UserName = UserName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
-    public void setPassword(String Password) {
-        this.Password = Password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRole() {
-        return Role;
+        return role;
     }
 
-    public void setRole(String Role) {
-        this.Role = Role;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -1,33 +1,33 @@
 package org.jaysabva;
 
 public class BugTask extends Task{
-    private String Severity;
-    private String StepToReproduce;
+    private String severity;
+    private String stepToReproduce;
 
     public BugTask() {
         super();
     }
 
-    public BugTask(String Title, String Description, String Status, String DueDate, String CreatedAt, String UpdatedAt, String Assignee, String CreatedBy, String Severity, String StepToReproduce) {
-        super(Title, Description, Status, DueDate, CreatedAt, UpdatedAt, Assignee, CreatedBy);
-        this.Severity = Severity;
-        this.StepToReproduce = StepToReproduce;
+    public BugTask(String title, String description, String status, String dueDate, String createdAt, String updatedAt, String assignee, String createdBy, String severity, String stepToReproduce) {
+        super(title, description, status, dueDate, createdAt, updatedAt, assignee, createdBy);
+        this.severity = severity;
+        this.stepToReproduce = stepToReproduce;
     }
 
     public String getSeverity() {
-        return Severity;
+        return severity;
     }
 
     public void setSeverity(String severity) {
-        Severity = severity;
+        this.severity = severity;
     }
 
     public String getStepToReproduce() {
-        return StepToReproduce;
+        return stepToReproduce;
     }
 
     public void setStepToReproduce(String stepToReproduce) {
-        StepToReproduce = stepToReproduce;
+        this.stepToReproduce = stepToReproduce;
     }
 
     @Override

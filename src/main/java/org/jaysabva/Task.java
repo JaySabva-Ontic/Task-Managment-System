@@ -3,31 +3,31 @@ package org.jaysabva;
 public abstract class Task {
     private static Long taskId = 1L;
 
-    private Long Id;
-    private String Title;
-    private String Description;
-    private String Status;
-    private String DueDate;
-    private String CreatedAt;
-    private String UpdatedAt;
-    private String Assignee;
-    private String CreatedBy;
+    private Long id;
+    private String title;
+    private String description;
+    private String status;
+    private String dueDate;
+    private String createdAt;
+    private String updatedAt;
+    private String assignee;
+    private String createdBy;
 
     public Task() {
-        this.Id = taskId;
+        this.id = taskId;
         incrTaskId();
     }
 
-    public Task(String Title, String Description, String Status, String DueDate, String CreatedAt, String UpdatedAt, String Assignee, String CreatedBy) {
-        this.Id = taskId;
-        this.Title = Title;
-        this.Description = Description;
-        this.Status = Status;
-        this.DueDate = DueDate;
-        this.CreatedAt = CreatedAt;
-        this.UpdatedAt = UpdatedAt;
-        this.Assignee = Assignee;
-        this.CreatedBy = CreatedBy;
+    public Task(String title, String description, String status, String dueDate, String createdAt, String updatedAt, String assignee, String createdBy) {
+        this.id = taskId;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.dueDate = dueDate;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.assignee = assignee;
+        this.createdBy = createdBy;
 
         incrTaskId();
     }
@@ -45,75 +45,75 @@ public abstract class Task {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public void setTitle(String title) {
-        Title = title;
+        this.title = title;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String status) {
-        Status = status;
+        this.status = status;
     }
 
     public String getDueDate() {
-        return DueDate;
+        return dueDate;
     }
 
     public void setDueDate(String dueDate) {
-        DueDate = dueDate;
+        this.dueDate = dueDate;
     }
 
     public String getCreatedAt() {
-        return CreatedAt;
+        return createdAt;
     }
 
     public void setCreatedAt(String createdAt) {
-        CreatedAt = createdAt;
+        this.createdAt = createdAt;
     }
 
     public String getUpdatedAt() {
-        return UpdatedAt;
+        return updatedAt;
     }
 
     public void setUpdatedAt(String updatedAt) {
-        UpdatedAt = updatedAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getAssignee() {
-        return Assignee;
+        return assignee;
     }
 
     public void setAssignee(String assignee) {
-        Assignee = assignee;
+        this.assignee = assignee;
     }
 
     public String getCreatedBy() {
-        return CreatedBy;
+        return createdBy;
     }
 
     public void setCreatedBy(String createdBy) {
-        CreatedBy = createdBy;
+        this.createdBy = createdBy;
     }
 
     public void viewTask() {
