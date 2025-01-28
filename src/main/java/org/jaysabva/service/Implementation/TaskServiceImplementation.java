@@ -9,7 +9,9 @@ import org.jaysabva.entity.FeatureTask;
 import org.jaysabva.entity.ImprovementTask;
 import org.jaysabva.entity.Task;
 import org.jaysabva.repository.Implementation.TaskRepositoryImplementation;
+import org.jaysabva.repository.Implementation.UserRepositoryImplementation;
 import org.jaysabva.repository.TaskRepository;
+import org.jaysabva.repository.UserRepository;
 import org.jaysabva.service.TaskService;
 
 import java.time.LocalDateTime;
@@ -19,10 +21,16 @@ import java.util.Objects;
 public class TaskServiceImplementation implements TaskService {
 
     private final TaskRepository taskRepository = new TaskRepositoryImplementation();
+    private final UserRepository userRepository = new UserRepositoryImplementation();
 
     @Override
     public String addTask(TaskDto task) {
         try {
+
+            if (userRepository.getUser(task.getAssignee()) == null) {
+                return "Assignee does not exist";
+            }
+
             Task newTask;
             if (Objects.equals(task.getTaskType(), "Bug")) {
                 newTask = new BugTask(task.getTitle(),  task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((BugTaskDto) task).getSeverity(), ((BugTaskDto) task).getStepToReproduce(), task.getTaskType());
@@ -35,6 +43,7 @@ public class TaskServiceImplementation implements TaskService {
             }
 
             taskRepository.addTask(newTask);
+
             return "Task added successfully";
         } catch (Exception e) {
             return "Error adding task";

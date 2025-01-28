@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class Main {
+    public static UserController userController = new UserController();
+    public static TaskController taskController = new TaskController();
+
     public static void main(String[] args) {
-        UserController userController = new UserController();
-        TaskController taskController = new TaskController();
 
         userController.registerUser(new UserDto("admin", "admin", "admin"));
         userController.registerUser(new UserDto("user", "user", "user"));
@@ -245,12 +246,18 @@ public class Main {
 //        System.out.println("Enter updated at: ");
         task.put("updatedAt", LocalDateTime.now());
 
-        System.out.println("Enter assignee: ");
-        task.put("assignee", scanner.nextLine());
+        while (true) {
+            System.out.println("Enter assignee: ");
+            String assignee = scanner.nextLine();
+            if (userController.getUser(assignee) != null) {
+                task.put("assignee", assignee);
+                break;
+            } else {
+                System.out.println("User does not exist. Please enter a valid username.");
+            }
+        }
 
-//        System.out.println("Enter created by: ");
         task.put("createdBy", username);
-
 
         return task;
     }
@@ -348,8 +355,16 @@ public class Main {
 
         task.setUpdatedAt(LocalDateTime.now());
 
-        System.out.println("Enter assignee: ");
-        task.setAssignee(scanner.nextLine());
+        while (true) {
+            System.out.println("Enter assignee: ");
+            String assignee = scanner.nextLine();
+            if (userController.getUser(assignee) != null) {
+                task.setAssignee(assignee);
+                break;
+            } else {
+                System.out.println("User does not exist. Please enter a valid username.");
+            }
+        }
 
         if (task instanceof BugTask bugTask) {
             System.out.println("Enter severity: ");
