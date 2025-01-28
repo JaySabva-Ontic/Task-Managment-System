@@ -1,6 +1,7 @@
 package org.jaysabva.service.Implementation;
 
 import org.jaysabva.entity.Task;
+import org.jaysabva.repository.Implementation.TaskRepositoryImplementation;
 import org.jaysabva.repository.TaskRepository;
 import org.jaysabva.service.TaskService;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class TaskServiceImplementation implements TaskService {
 
-    private final TaskRepository taskRepository = new TaskRepository();
+    private final TaskRepository taskRepository = new TaskRepositoryImplementation();
 
     @Override
     public String addTask(Task task) {

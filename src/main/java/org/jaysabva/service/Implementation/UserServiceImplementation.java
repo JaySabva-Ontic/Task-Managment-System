@@ -1,16 +1,15 @@
 package org.jaysabva.service.Implementation;
 
 import org.jaysabva.entity.User;
+import org.jaysabva.repository.Implementation.UserRepositoryImplementation;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.service.UserService;
-import org.jaysabva.util.BCryptUtil;
 
 import java.util.List;
-import java.util.Map;
 
 public class UserServiceImplementation implements UserService {
 
-    private final UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository = new UserRepositoryImplementation();
 
     @Override
     public String registerUser(String username, String password, String role) {
@@ -30,12 +29,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public User loginUser(String username, String password) {
         try {
-
-            if (userRepository.login(username, password)) {
-                return getUser(username);
-            } else {
-                return null;
-            }
+            return userRepository.login(username, password);
         } catch (Exception e) {
             return null;
         }
@@ -62,7 +56,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public String deleteUser(String username, String password) {
         try {
-            if (userRepository.login(username, password)) {
+            if (userRepository.login(username, password) != null) {
                 userRepository.deleteUser(username);
                 return "User deleted successfully";
             } else {
