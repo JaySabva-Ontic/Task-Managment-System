@@ -2,9 +2,10 @@ package org.jaysabva;
 
 import org.jaysabva.controller.TaskController;
 import org.jaysabva.controller.UserController;
-import org.jaysabva.dto.UserDto;
+import org.jaysabva.dto.*;
 import org.jaysabva.entity.*;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -217,8 +218,8 @@ public class Main {
         return new UserDto(userName, password, role);
     }
 
-    private static Map<String, String> createTask(Scanner scanner, String username) {
-        Map<String, String> task = new HashMap<>();
+    private static Map<String, Object> createTask(Scanner scanner, String username) {
+        Map<String, Object> task = new HashMap<>();
 
         System.out.println("Enter title: ");
         task.put("title", scanner.nextLine());
@@ -229,14 +230,15 @@ public class Main {
         System.out.println("Enter status: ");
         task.put("status", scanner.nextLine());
 
-        System.out.println("Enter due date: ");
-        task.put("dueDate", scanner.nextLine());
+        System.out.println("Enter due date: (yyyy-mm-dd)");
+        LocalDateTime dueDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+        task.put("dueDate", dueDate);
 
 //        System.out.println("Enter created at: ");
-        task.put("createdAt", LocalDateTime.now().toString());
+        task.put("createdAt", LocalDateTime.now());
 
 //        System.out.println("Enter updated at: ");
-        task.put("updatedAt", LocalDateTime.now().toString());
+        task.put("updatedAt", LocalDateTime.now());
 
         System.out.println("Enter assignee: ");
         task.put("assignee", scanner.nextLine());
@@ -244,70 +246,78 @@ public class Main {
 //        System.out.println("Enter created by: ");
         task.put("createdBy", username);
 
+
         return task;
     }
 
-    private static BugTask createBugTask(Scanner scanner, String username) {
-        BugTask bugTask = new BugTask();
-        Map<String, String> task = createTask(scanner, username);
-        bugTask.setTitle(task.get("title"));
-        bugTask.setDescription(task.get("description"));
-        bugTask.setStatus(task.get("status"));
-        bugTask.setDueDate(task.get("dueDate"));
-        bugTask.setCreatedAt(task.get("createdAt"));
-        bugTask.setUpdatedAt(task.get("updatedAt"));
-        bugTask.setAssignee(task.get("assignee"));
-        bugTask.setCreatedBy(task.get("createdBy"));
+    private static <T> void fieldAssignment (Map<String, Object> task, TaskDto taskType) {
+        taskType.setTitle((String) task.get("title"));
+        taskType.setDescription((String) task.get("description"));
+        taskType.setStatus((String) task.get("status"));
+        taskType.setDueDate((LocalDateTime) task.get("dueDate"));
+        taskType.setCreatedAt((LocalDateTime) task.get("createdAt"));
+        taskType.setUpdatedAt((LocalDateTime) task.get("updatedAt"));
+        taskType.setAssignee((String) task.get("assignee"));
+        taskType.setCreatedBy((String) task.get("createdBy"));
+        taskType.setTaskType((String) task.get("taskType"));
+    }
+
+    private static BugTaskDto createBugTask(Scanner scanner, String username) {
+        BugTaskDto bugTask = new BugTaskDto();
+        Map<String, Object> task = createTask(scanner, username);
+        fieldAssignment(task, bugTask);
 
         System.out.println("Enter severity: ");
         bugTask.setSeverity(scanner.nextLine());
 
-        System.out.println("Enter step to reproduce: ");
-        bugTask.setStepToReproduce(scanner.nextLine());
+        System.out.println("Enter step to reproduce: (q: to exit)");
+        String input;
+        long cnt = 0;
+        while (true) {
+            System.out.println("Step " + ++cnt + ": ");
+            input = scanner.nextLine();
 
+            if (input.equals("q:")) {
+                break;
+            }
+
+            if (input.isBlank()) {
+                continue;
+            }
+            bugTask.getStepToReproduce().add(input);
+        }
+
+        bugTask.setTaskType("Bug");
         return bugTask;
     }
 
-    private static FeatureTask createFeatureTask(Scanner scanner, String username) {
-        FeatureTask featureTask = new FeatureTask();
+    private static FeatureTaskDto createFeatureTask(Scanner scanner, String username) {
+        FeatureTaskDto featureTask = new FeatureTaskDto();
 
-        Map<String, String> task = createTask(scanner, username);
-        featureTask.setTitle(task.get("title"));
-        featureTask.setDescription(task.get("description"));
-        featureTask.setStatus(task.get("status"));
-        featureTask.setDueDate(task.get("dueDate"));
-        featureTask.setCreatedAt(task.get("createdAt"));
-        featureTask.setUpdatedAt(task.get("updatedAt"));
-        featureTask.setAssignee(task.get("assignee"));
-        featureTask.setCreatedBy(task.get("createdBy"));
+        Map<String, Object> task = createTask(scanner, username);
+        fieldAssignment(task, featureTask);
 
         System.out.println("Enter feature description: ");
         featureTask.setFeatureDescription(scanner.nextLine());
 
         System.out.println("Enter estimated effort: ");
-        featureTask.setEstimatedEffort(scanner.nextLine());
+        featureTask.setEstimatedEffort(Duration.parse(scanner.nextLine()));
+
+        featureTask.setTaskType("Feature");
 
         return featureTask;
     }
 
-    private static ImprovementTask createImprovementTask(Scanner scanner, String username) {
-        ImprovementTask improvementTask = new ImprovementTask();
+    private static ImprovementTaskDto createImprovementTask(Scanner scanner, String username) {
+        ImprovementTaskDto improvementTask = new ImprovementTaskDto();
 
-        Map<String, String> task = createTask(scanner, username);
-        improvementTask.setTitle(task.get("title"));
-        improvementTask.setDescription(task.get("description"));
-        improvementTask.setStatus(task.get("status"));
-        improvementTask.setDueDate(task.get("dueDate"));
-        improvementTask.setCreatedAt(task.get("createdAt"));
-        improvementTask.setUpdatedAt(task.get("updatedAt"));
-        improvementTask.setAssignee(task.get("assignee"));
-        improvementTask.setCreatedBy(task.get("createdBy"));
-
-        System.out.println("Enter current state: ");
-        improvementTask.setCurrentState(scanner.nextLine());
+        Map<String, Object> task = createTask(scanner, username);
+        fieldAssignment(task, improvementTask);
 
         System.out.println("Enter proposed improvement: ");
         improvementTask.setProposedImprovement(scanner.nextLine());
+
+        improvementTask.setTaskType("Improvement");
 
         return improvementTask;
     }
@@ -322,37 +332,43 @@ public class Main {
         System.out.println("Enter status: ");
         task.setStatus(scanner.nextLine());
 
-        System.out.println("Enter due date: ");
-        task.setDueDate(scanner.nextLine());
+        System.out.println("Enter due date: (yyyy-mm-dd)");
+        LocalDateTime dueDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+        task.setDueDate(dueDate);
 
-//        System.out.println("Enter created at: ");
-//        task.setCreatedAt(scanner.nextLine());
-
-//        System.out.println("Enter updated at: ");
-        task.setUpdatedAt(LocalDateTime.now().toString());
+        task.setUpdatedAt(LocalDateTime.now());
 
         System.out.println("Enter assignee: ");
         task.setAssignee(scanner.nextLine());
-
-//        System.out.println("Enter created by: ");
-//        task.setCreatedBy(scanner.nextLine());
 
         if (task instanceof BugTask bugTask) {
             System.out.println("Enter severity: ");
             bugTask.setSeverity(scanner.nextLine());
 
-            System.out.println("Enter step to reproduce: ");
-            bugTask.setStepToReproduce(scanner.nextLine());
+            System.out.println("Enter step to reproduce: (q: to exit)");
+            String input;
+            long cnt = 0;
+            while (true) {
+                System.out.println("Step " + ++cnt + ": ");
+                input = scanner.nextLine();
+
+                if (input.equals("q:")) {
+                    break;
+                }
+
+                if (input.isBlank()) {
+                    continue;
+                }
+
+                bugTask.getStepToReproduce().add(input);
+            }
         } else if (task instanceof FeatureTask featureTask) {
             System.out.println("Enter feature description: ");
             featureTask.setFeatureDescription(scanner.nextLine());
 
             System.out.println("Enter estimated effort: ");
-            featureTask.setEstimatedEffort(scanner.nextLine());
+            featureTask.setEstimatedEffort(Duration.parse(scanner.nextLine()));
         } else if (task instanceof ImprovementTask improvementTask) {
-            System.out.println("Enter current state: ");
-            improvementTask.setCurrentState(scanner.nextLine());
-
             System.out.println("Enter proposed improvement: ");
             improvementTask.setProposedImprovement(scanner.nextLine());
         }
