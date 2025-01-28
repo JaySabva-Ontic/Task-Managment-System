@@ -1,5 +1,6 @@
 package org.jaysabva.controller;
 
+import org.jaysabva.dto.TaskDto;
 import org.jaysabva.entity.Task;
 import org.jaysabva.service.Implementation.TaskServiceImplementation;
 import org.jaysabva.service.TaskService;
@@ -9,7 +10,7 @@ import java.util.List;
 public class TaskController {
     private final TaskService taskService = new TaskServiceImplementation();
 
-    public String addTask(Task task) {
+    public String addTask(TaskDto task) {
         return taskService.addTask(task);
     }
 
