@@ -1,5 +1,7 @@
 package org.jaysabva.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Task {
@@ -9,18 +11,20 @@ public abstract class Task {
     private String title;
     private String description;
     private String status;
-    private String dueDate;
-    private String createdAt;
-    private String updatedAt;
+    private LocalDateTime startDate;
+    private LocalDateTime dueDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String assignee;
     private String createdBy;
+    private String taskType;
 
     public Task() {
         this.id = taskId.longValue();
         incrTaskId();
     }
 
-    public Task(String title, String description, String status, String dueDate, String createdAt, String updatedAt, String assignee, String createdBy) {
+    public Task(String title, String description, String status, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType) {
         this.id = taskId.longValue();
         this.title = title;
         this.description = description;
@@ -30,6 +34,7 @@ public abstract class Task {
         this.updatedAt = updatedAt;
         this.assignee = assignee;
         this.createdBy = createdBy;
+        this.taskType = taskType;
 
         incrTaskId();
     }
@@ -78,27 +83,27 @@ public abstract class Task {
         this.status = status;
     }
 
-    public String getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -118,8 +123,17 @@ public abstract class Task {
         this.createdBy = createdBy;
     }
 
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
     public void viewTask() {
         System.out.println("Id: " + getId());
+        System.out.println("Task Type: " + getTaskType());
         System.out.println("Title: " + getTitle());
         System.out.println("Description: " + getDescription());
         System.out.println("Status: " + getStatus());

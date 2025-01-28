@@ -1,15 +1,18 @@
 package org.jaysabva.entity;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class FeatureTask extends Task {
     private String featureDescription;
-    private String estimatedEffort;
+    private Duration estimatedEffort;
 
     public FeatureTask() {
         super();
     }
 
-    public FeatureTask(String title, String description, String status, String dueDate, String createdAt, String updatedAt, String assignee, String createdBy, String featureDescription, String estimatedEffort) {
-        super(title, description, status, dueDate, createdAt, updatedAt, assignee, createdBy);
+    public FeatureTask(String title, String description, String status, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String featureDescription, Duration estimatedEffort, String taskType) {
+        super(title, description, status, dueDate, createdAt, updatedAt, assignee, createdBy, taskType);
         this.featureDescription = featureDescription;
         this.estimatedEffort = estimatedEffort;
     }
@@ -22,11 +25,11 @@ public class FeatureTask extends Task {
         this.featureDescription = featureDescription;
     }
 
-    public String getEstimatedEffort() {
+    public Duration getEstimatedEffort() {
         return estimatedEffort;
     }
 
-    public void setEstimatedEffort(String estimatedEffort) {
+    public void setEstimatedEffort(Duration estimatedEffort) {
         this.estimatedEffort = estimatedEffort;
     }
 
