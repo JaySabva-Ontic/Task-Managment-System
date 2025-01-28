@@ -5,12 +5,20 @@ import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Task {
+
+    public enum Status {
+        PENDING,
+        IN_PROGRESS,
+        COMPLETED,
+        CANCELLED
+    }
+
     private static AtomicLong taskId = new AtomicLong(1);
 
     private Long id;
     private String title;
     private String description;
-    private String status;
+    private Status status;
     private LocalDateTime startDate;
     private LocalDateTime dueDate;
     private LocalDateTime createdAt;
@@ -28,7 +36,7 @@ public abstract class Task {
         this.id = taskId.longValue();
         this.title = title;
         this.description = description;
-        this.status = status;
+        this.status = getStatus(status);
         this.startDate = startDate;
         this.dueDate = dueDate;
         this.createdAt = createdAt;
@@ -38,6 +46,14 @@ public abstract class Task {
         this.taskType = taskType;
 
         incrTaskId();
+    }
+
+    private static Status getStatus(String status) {
+        try {
+            return Status.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            return Status.PENDING;
+        }
     }
 
     private static void incrTaskId() {
@@ -77,11 +93,11 @@ public abstract class Task {
     }
 
     public String getStatus() {
-        return status;
+        return status.toString();
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = Status.valueOf(status);
     }
 
     public LocalDateTime getStartDate() {

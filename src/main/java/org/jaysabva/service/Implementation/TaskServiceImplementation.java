@@ -26,11 +26,6 @@ public class TaskServiceImplementation implements TaskService {
     @Override
     public String addTask(TaskDto task) {
         try {
-
-            if (userRepository.getUser(task.getAssignee()) == null) {
-                return "Assignee does not exist";
-            }
-
             Task newTask;
             if (Objects.equals(task.getTaskType(), "Bug")) {
                 newTask = new BugTask(task.getTitle(),  task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((BugTaskDto) task).getSeverity(), ((BugTaskDto) task).getStepToReproduce(), task.getTaskType());
