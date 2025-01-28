@@ -1,7 +1,9 @@
 package org.jaysabva.entity;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class User {
-    private static Long id = 1L;
+    private static AtomicLong id = new AtomicLong(1);
     private Long userId;
     private String userName;
     private String password;
@@ -11,7 +13,7 @@ public class User {
     }
 
     public User(String userName, String password, String role) {
-        this.userId = id;
+        this.userId = id.longValue();
         this.userName = userName;
         this.password = password;
         this.role = role;
@@ -30,7 +32,7 @@ public class User {
     }
 
     private static void incrId() {
-        id++;
+        id.incrementAndGet();
     }
 
     public Long getUserId() {

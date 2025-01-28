@@ -1,7 +1,9 @@
 package org.jaysabva.entity;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public abstract class Task {
-    private static Long taskId = 1L;
+    private static AtomicLong taskId = new AtomicLong(1);
 
     private Long id;
     private String title;
@@ -14,12 +16,12 @@ public abstract class Task {
     private String createdBy;
 
     public Task() {
-        this.id = taskId;
+        this.id = taskId.longValue();
         incrTaskId();
     }
 
     public Task(String title, String description, String status, String dueDate, String createdAt, String updatedAt, String assignee, String createdBy) {
-        this.id = taskId;
+        this.id = taskId.longValue();
         this.title = title;
         this.description = description;
         this.status = status;
@@ -33,15 +35,15 @@ public abstract class Task {
     }
 
     private static void incrTaskId() {
-        taskId++;
+        taskId.incrementAndGet();
     }
 
     public static Long getTaskId() {
-        return taskId;
+        return taskId.longValue();
     }
 
     public static void setTaskId(Long taskId) {
-        Task.taskId = taskId;
+        Task.taskId = new AtomicLong(taskId);
     }
 
     public Long getId() {
