@@ -1,5 +1,6 @@
 package org.jaysabva.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,8 @@ public class BugTask extends Task {
         super();
     }
 
-    public BugTask(String title, String description, String status, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String severity, List<String> stepToReproduce, String taskType) {
-        super(title, description, status, dueDate, createdAt, updatedAt, assignee, createdBy, taskType);
+    public BugTask(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String severity, List<String> stepToReproduce, String taskType) {
+        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType);
         this.severity = severity;
         this.stepToReproduce = stepToReproduce;
     }

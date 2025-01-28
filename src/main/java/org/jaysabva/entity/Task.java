@@ -24,11 +24,12 @@ public abstract class Task {
         incrTaskId();
     }
 
-    public Task(String title, String description, String status, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType) {
+    public Task(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType) {
         this.id = taskId.longValue();
         this.title = title;
         this.description = description;
         this.status = status;
+        this.startDate = startDate;
         this.dueDate = dueDate;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -81,6 +82,14 @@ public abstract class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
     public LocalDateTime getDueDate() {
@@ -137,6 +146,7 @@ public abstract class Task {
         System.out.println("Title: " + getTitle());
         System.out.println("Description: " + getDescription());
         System.out.println("Status: " + getStatus());
+        System.out.println("Start Date: " + getStartDate());
         System.out.println("Due Date: " + getDueDate());
         System.out.println("Created At: " + getCreatedAt());
         System.out.println("Updated At: " + getUpdatedAt());

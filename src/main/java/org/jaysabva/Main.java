@@ -6,6 +6,7 @@ import org.jaysabva.dto.*;
 import org.jaysabva.entity.*;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -230,6 +231,10 @@ public class Main {
         System.out.println("Enter status: ");
         task.put("status", scanner.nextLine());
 
+        System.out.println("Enter start date: (yyyy-mm-dd");
+        LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+        task.put("startDate", startDate);
+
         System.out.println("Enter due date: (yyyy-mm-dd)");
         LocalDateTime dueDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
         task.put("dueDate", dueDate);
@@ -254,6 +259,7 @@ public class Main {
         taskType.setTitle((String) task.get("title"));
         taskType.setDescription((String) task.get("description"));
         taskType.setStatus((String) task.get("status"));
+        taskType.setStartDate((LocalDateTime) task.get("startDate"));
         taskType.setDueDate((LocalDateTime) task.get("dueDate"));
         taskType.setCreatedAt((LocalDateTime) task.get("createdAt"));
         taskType.setUpdatedAt((LocalDateTime) task.get("updatedAt"));
@@ -331,6 +337,10 @@ public class Main {
 
         System.out.println("Enter status: ");
         task.setStatus(scanner.nextLine());
+
+        System.out.println("Enter start date: (yyyy-mm-dd)");
+        LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+        task.setStartDate(startDate);
 
         System.out.println("Enter due date: (yyyy-mm-dd)");
         LocalDateTime dueDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
