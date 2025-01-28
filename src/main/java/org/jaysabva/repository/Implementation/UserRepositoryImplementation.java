@@ -1,5 +1,6 @@
 package org.jaysabva.repository.Implementation;
 
+import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.util.BCryptUtil;
@@ -13,11 +14,7 @@ public class UserRepositoryImplementation implements UserRepository {
     Map<String, User> users = new HashMap<>();
 
     @Override
-    public void signUp(String username, String password, String role) {
-        password = BCryptUtil.hashPassword(password);
-
-        User user = new User(username, password, role);
-
+    public void signUp(User user) {
         users.put(user.getUserName(), user);
     }
 
@@ -27,7 +24,10 @@ public class UserRepositoryImplementation implements UserRepository {
     }
 
     @Override
-    public User login(String username, String password) {
+    public User login(UserDto loginInput) {
+        String username = loginInput.username();
+        String password = loginInput.password();
+
         User user = users.get(username);
         if (user != null && BCryptUtil.checkPassword(password, user.getPassword())) {
             return user;
@@ -42,10 +42,15 @@ public class UserRepositoryImplementation implements UserRepository {
     }
 
     @Override
-    public void updateUser(String username, User user) {
+    public void updateUser(String username, UserDto user) {
         if (users.containsKey(username)) {
+            User oldUser = users.get(username);
+            oldUser.setUserName(user.username());
+            oldUser.setPassword(user.password());
+            oldUser.setRole(user.role());
+
             users.remove(username);
-            signUp(user.getUserName(), user.getPassword(), user.getRole());
+            users.put(user.username(), oldUser);
         }
     }
 

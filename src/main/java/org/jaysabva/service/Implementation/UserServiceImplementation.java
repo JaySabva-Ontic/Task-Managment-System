@@ -1,9 +1,11 @@
 package org.jaysabva.service.Implementation;
 
+import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 import org.jaysabva.repository.Implementation.UserRepositoryImplementation;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.service.UserService;
+import org.jaysabva.util.BCryptUtil;
 
 import java.util.List;
 
@@ -12,13 +14,15 @@ public class UserServiceImplementation implements UserService {
     private final UserRepository userRepository = new UserRepositoryImplementation();
 
     @Override
-    public String registerUser(String username, String password, String role) {
+    public String registerUser(UserDto userDto) {
         try {
-            if (userRepository.userExists(username)) {
+            if (userRepository.userExists(userDto.username())) {
                 return "User already exists";
             } else {
 
-                userRepository.signUp(username, password, role);
+                User user = new User(userDto.username(), BCryptUtil.hashPassword(userDto.password()), userDto.role());
+
+                userRepository.signUp(user);
                 return "User registered successfully";
             }
         } catch (Exception e) {
@@ -27,21 +31,21 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User loginUser(String username, String password) {
+    public User loginUser(UserDto loginInput) {
         try {
-            return userRepository.login(username, password);
+            return userRepository.login(loginInput);
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public String updateUser(String username, User user) {
+    public String updateUser(String username, UserDto user) {
         try {
             if (!userRepository.userExists(username)) {
                 return "User doesn't exists";
             }
-            if (userRepository.userExists(user.getUserName())) {
+            if (userRepository.userExists(user.username())) {
                 return "User on that updated username already exists";
             }
 
@@ -54,10 +58,10 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public String deleteUser(String username, String password) {
+    public String deleteUser(UserDto loginInput) {
         try {
-            if (userRepository.login(username, password) != null) {
-                userRepository.deleteUser(username);
+            if (userRepository.login(loginInput) != null) {
+                userRepository.deleteUser(loginInput.username());
                 return "User deleted successfully";
             } else {
                 return "Invalid credentials";

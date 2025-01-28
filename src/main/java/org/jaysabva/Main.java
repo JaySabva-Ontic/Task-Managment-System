@@ -1,7 +1,8 @@
 package org.jaysabva;
 
-import org.jaysabva.controller.TaskContoller;
+import org.jaysabva.controller.TaskController;
 import org.jaysabva.controller.UserController;
+import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.*;
 
 import java.time.LocalDateTime;
@@ -10,10 +11,10 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         UserController userController = new UserController();
-        TaskContoller taskContoller = new TaskContoller();
+        TaskController taskController = new TaskController();
 
-        userController.registerUser("admin", "admin", "admin");
-        userController.registerUser("user", "user", "user");
+        userController.registerUser(new UserDto("admin", "admin", "admin"));
+        userController.registerUser(new UserDto("user", "user", "user"));
 
 
         Scanner scanner = new Scanner(System.in);
@@ -23,8 +24,8 @@ public class Main {
             User loggedInUser = null;
             while (true) {
                 try {
-                    String[] loginInput = loginInput(scanner);
-                    loggedInUser = userController.loginUser(loginInput[0], loginInput[1]);
+                    UserDto loginInput = loginInput(scanner);
+                    loggedInUser = userController.loginUser(loginInput);
                     if (loggedInUser != null) {
                         System.out.println("Login successful!");
                         break;
@@ -50,13 +51,13 @@ public class Main {
                         int option = Integer.parseInt(scanner.nextLine());
 
                         boolean taskRelated = false;
-                        String[] signUpInput;
+                        UserDto signUpInput;
                         String username;
 
                         switch (option) {
                             case 1:
                                 signUpInput = signUpInput(scanner);
-                                userController.registerUser(signUpInput[0], signUpInput[1], signUpInput[2]);
+                                userController.registerUser(signUpInput);
 
                                 break;
                             case 2:
@@ -67,9 +68,7 @@ public class Main {
 
                                 signUpInput = signUpInput(scanner);
 
-                                User user = new User(signUpInput[0], signUpInput[1], signUpInput[2]);
-
-                                System.out.println(userController.updateUser(username, user));
+                                System.out.println(userController.updateUser(username, signUpInput));
 
                                 break;
                             case 3:
@@ -82,7 +81,7 @@ public class Main {
                             case 4:
                                 List<User> users = userController.getAllUsers();
                                 for (User u : users) {
-                                    System.out.println("Username: " + u.getUserName() + ", Role: " + u.getRole());
+                                    System.out.println("UserID: " + u.getUserId() + " Username: " + u.getUserName() + ", Role: " + u.getRole());
                                 }
                                 break;
                             case 5:
@@ -121,13 +120,13 @@ public class Main {
 
                             switch (option) {
                                 case 1:
-                                    taskContoller.addTask(createBugTask(scanner, loggedInUser.getUserName()));
+                                    taskController.addTask(createBugTask(scanner, loggedInUser.getUserName()));
                                     break;
                                 case 2:
-                                    taskContoller.addTask(createFeatureTask(scanner, loggedInUser.getUserName()));
+                                    taskController.addTask(createFeatureTask(scanner, loggedInUser.getUserName()));
                                     break;
                                 case 3:
-                                    taskContoller.addTask(createImprovementTask(scanner, loggedInUser.getUserName()));
+                                    taskController.addTask(createImprovementTask(scanner, loggedInUser.getUserName()));
                                     break;
                                 default:
                                     System.out.println("Invalid task type. Please try again.");
@@ -135,29 +134,29 @@ public class Main {
                             break;
                         case 2:
                             System.out.println("Enter Task ID to update: ");
-                            int taskId = Integer.parseInt(scanner.nextLine());
-                            Task taskToUpdate = taskContoller.getTask((long) taskId);
+                            long taskId = Long.parseLong(scanner.nextLine());
+                            Task taskToUpdate = taskController.getTask(taskId);
 
                             if (taskToUpdate == null) {
                                 System.out.println("Task with ID " + taskId + " not found.");
                                 break;
                             }
 
-                            taskContoller.updateTask(updateTask(taskToUpdate, scanner));
+                            taskController.updateTask(updateTask(taskToUpdate, scanner));
                             System.out.println("Task updated successfully!");
 
                             break;
                         case 3:
                             System.out.println("Enter Task ID to delete: ");
-                            taskId = Integer.parseInt(scanner.nextLine());
+                            taskId = Long.parseLong(scanner.nextLine());
 
-                            System.out.println(taskContoller.deleteTask((long) taskId));
+                            System.out.println(taskController.deleteTask(taskId));
                             break;
                         case 4:
                             System.out.println("Enter Task ID to view: ");
-                            taskId = Integer.parseInt(scanner.nextLine());
+                            taskId = Long.parseLong(scanner.nextLine());
 
-                            Task taskToView = taskContoller.getTask((long) taskId);
+                            Task taskToView = taskController.getTask(taskId);
                             if (taskToView == null) {
                                 System.out.println("Task with ID " + taskId + " not found.");
                             } else {
@@ -165,7 +164,7 @@ public class Main {
                             }
                             break;
                         case 5:
-                            List<Task> allTasks = taskContoller.getAllTasks();
+                            List<Task> allTasks = taskController.getAllTasks();
                             if (allTasks == null) {
                                 System.out.println("No tasks found.");
                             } else {
@@ -195,17 +194,17 @@ public class Main {
         }
     }
 
-    private static String[] loginInput(Scanner scanner) {
+    private static UserDto loginInput(Scanner scanner) {
         System.out.println("Enter your username: ");
         String userName = scanner.nextLine();
 
         System.out.println("Enter your password: ");
         String password = scanner.nextLine();
 
-        return new String[]{userName, password};
+        return new UserDto(userName, password, "");
     }
 
-    private static String[] signUpInput(Scanner scanner) {
+    private static UserDto signUpInput(Scanner scanner) {
         System.out.println("Enter your username: ");
         String userName = scanner.nextLine();
 
@@ -215,7 +214,7 @@ public class Main {
         System.out.println("Enter your role: ");
         String role = scanner.nextLine();
 
-        return new String[]{userName, password, role};
+        return new UserDto(userName, password, role);
     }
 
     private static Map<String, String> createTask(Scanner scanner, String username) {
@@ -338,22 +337,19 @@ public class Main {
 //        System.out.println("Enter created by: ");
 //        task.setCreatedBy(scanner.nextLine());
 
-        if (task instanceof BugTask) {
-            BugTask bugTask = (BugTask) task;
+        if (task instanceof BugTask bugTask) {
             System.out.println("Enter severity: ");
             bugTask.setSeverity(scanner.nextLine());
 
             System.out.println("Enter step to reproduce: ");
             bugTask.setStepToReproduce(scanner.nextLine());
-        } else if (task instanceof FeatureTask) {
-            FeatureTask featureTask = (FeatureTask) task;
+        } else if (task instanceof FeatureTask featureTask) {
             System.out.println("Enter feature description: ");
             featureTask.setFeatureDescription(scanner.nextLine());
 
             System.out.println("Enter estimated effort: ");
             featureTask.setEstimatedEffort(scanner.nextLine());
-        } else if (task instanceof ImprovementTask) {
-            ImprovementTask improvementTask = (ImprovementTask) task;
+        } else if (task instanceof ImprovementTask improvementTask) {
             System.out.println("Enter current state: ");
             improvementTask.setCurrentState(scanner.nextLine());
 

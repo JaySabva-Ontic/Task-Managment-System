@@ -1,5 +1,6 @@
 package org.jaysabva.controller;
 
+import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 import org.jaysabva.service.Implementation.UserServiceImplementation;
 import org.jaysabva.service.UserService;
@@ -9,20 +10,20 @@ import java.util.List;
 public class UserController {
     private final UserService userService = new UserServiceImplementation();
 
-    public String registerUser(String username, String password, String role) {
-        return userService.registerUser(username, password, role);
+    public String registerUser(UserDto signUpInput) {
+        return userService.registerUser(signUpInput);
     }
 
-    public User loginUser(String username, String password) {
-        return userService.loginUser(username, password);
+    public User loginUser(UserDto loginInput) {
+        return userService.loginUser(loginInput);
     }
 
-    public String updateUser(String username, User user) {
+    public String updateUser(String username, UserDto user) {
         return userService.updateUser(username, user);
     }
 
-    public String deleteUser(String username, String password) {
-        return userService.deleteUser(username, password);
+    public String deleteUser(UserDto user) {
+        return userService.deleteUser(user);
     }
 
     public User getUser(String username) {

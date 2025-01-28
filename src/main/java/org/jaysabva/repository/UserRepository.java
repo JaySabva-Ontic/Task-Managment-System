@@ -1,15 +1,16 @@
 package org.jaysabva.repository;
 
+import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 
 import java.util.List;
 
 public interface UserRepository {
-    void signUp(String username, String password, String role);
+    void signUp(User user);
     boolean userExists(String username);
-    User login(String username, String password);
+    User login(UserDto loginInput);
     User getUser(String userName);
-    void updateUser(String username, User user);
+    void updateUser(String username, UserDto user);
     void deleteUser(String username);
     List<User> getUsers();
 }
