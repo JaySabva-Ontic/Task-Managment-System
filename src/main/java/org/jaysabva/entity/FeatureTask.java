@@ -39,6 +39,6 @@ public class FeatureTask extends Task {
         super.viewTask();
 
         System.out.println("Feature Description: " + getFeatureDescription());
-        System.out.println("Estimated Effort: " + getEstimatedEffort());
+        System.out.println("Estimated Effort: " + getEstimatedEffort().toHours() + " hours");
     }
 }

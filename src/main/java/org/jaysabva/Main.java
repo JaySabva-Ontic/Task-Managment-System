@@ -329,8 +329,8 @@ public class Main {
         System.out.println("Enter feature description: ");
         featureTask.setFeatureDescription(scanner.nextLine());
 
-        System.out.println("Enter estimated effort: ");
-        featureTask.setEstimatedEffort(Duration.parse(scanner.nextLine()));
+        System.out.println("Enter estimated effort: (hours)");
+        featureTask.setEstimatedEffort(Duration.parse("PT" + scanner.nextLine() + "H"));
 
         featureTask.setTaskType("FEATURE");
 
@@ -407,8 +407,8 @@ public class Main {
             System.out.println("Enter feature description: ");
             featureTask.setFeatureDescription(scanner.nextLine());
 
-            System.out.println("Enter estimated effort: ");
-            featureTask.setEstimatedEffort(Duration.parse(scanner.nextLine()));
+            System.out.println("Enter estimated effort: (hours)");
+            featureTask.setEstimatedEffort(Duration.parse("PT" + scanner.nextLine() + "H"));
         } else if (task instanceof ImprovementTask improvementTask) {
             System.out.println("Enter proposed improvement: ");
             improvementTask.setProposedImprovement(scanner.nextLine());
