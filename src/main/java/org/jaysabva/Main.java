@@ -24,12 +24,12 @@ public class Main {
 
         while (true) {
 
-            User loggedInUser = null;
+            Optional<User> loggedInUser = Optional.empty();
             while (true) {
                 try {
                     UserDto loginInput = loginInput(scanner);
                     loggedInUser = userController.loginUser(loginInput);
-                    if (loggedInUser != null) {
+                    if (loggedInUser.isPresent()) {
                         System.out.println("Login successful!");
                         break;
                     } else {
@@ -41,7 +41,7 @@ public class Main {
                 }
             }
 
-            if (loggedInUser.getRole().equals("admin")) {
+            if (loggedInUser.get().getRole().equals("admin")) {
                 while (true) {
                     try {
                         System.out.print("1 - Create User\n" +
@@ -67,7 +67,7 @@ public class Main {
                                 do {
                                     System.out.println("Enter username to update: ");
                                     username = scanner.nextLine();
-                                } while (userController.getUser(username) == null);
+                                } while (userController.getUser(username).isEmpty());
 
                                 signUpInput = signUpInput(scanner);
 
@@ -123,13 +123,13 @@ public class Main {
 
                             switch (option) {
                                 case 1:
-                                    taskController.addTask(createBugTask(scanner, loggedInUser.getUserName()));
+                                    taskController.addTask(createBugTask(scanner, loggedInUser.get().getUserName()));
                                     break;
                                 case 2:
-                                    taskController.addTask(createFeatureTask(scanner, loggedInUser.getUserName()));
+                                    taskController.addTask(createFeatureTask(scanner, loggedInUser.get().getUserName()));
                                     break;
                                 case 3:
-                                    taskController.addTask(createImprovementTask(scanner, loggedInUser.getUserName()));
+                                    taskController.addTask(createImprovementTask(scanner, loggedInUser.get().getUserName()));
                                     break;
                                 default:
                                     System.out.println("Invalid task type. Please try again.");
@@ -138,14 +138,15 @@ public class Main {
                         case 2:
                             System.out.println("Enter Task ID to update: ");
                             long taskId = Long.parseLong(scanner.nextLine());
-                            Task taskToUpdate = taskController.getTask(taskId);
+                            Optional<Task> taskToUpdate = taskController.getTask(taskId);
 
-                            if (taskToUpdate == null) {
+                            if (taskToUpdate.isEmpty()) {
                                 System.out.println("Task with ID " + taskId + " not found.");
                                 break;
                             }
 
-                            taskController.updateTask(updateTask(taskToUpdate, scanner));
+                            Task task1 = taskToUpdate.get();
+                            taskController.updateTask(updateTask(task1, scanner));
                             System.out.println("Task updated successfully!");
 
                             break;
@@ -159,11 +160,11 @@ public class Main {
                             System.out.println("Enter Task ID to view: ");
                             taskId = Long.parseLong(scanner.nextLine());
 
-                            Task taskToView = taskController.getTask(taskId);
-                            if (taskToView == null) {
+                            Optional<Task> taskToView = taskController.getTask(taskId);
+                            if (taskToView.isEmpty()) {
                                 System.out.println("Task with ID " + taskId + " not found.");
                             } else {
-                                taskToView.viewTask();
+                                taskToView.get().viewTask();
                             }
                             break;
                         case 5:
@@ -180,13 +181,13 @@ public class Main {
                             break;
                         case 6:
                             System.out.println("Logging out...");
-                            loggedInUser = null;
+                            loggedInUser = Optional.empty();
                             break;
                         default:
                             System.out.println("Invalid option. Please select a valid option.");
                     }
 
-                    if (loggedInUser == null)
+                    if (loggedInUser.isEmpty())
                         break;
 
                 } catch (NumberFormatException e) {
@@ -249,7 +250,7 @@ public class Main {
         while (true) {
             System.out.println("Enter assignee: ");
             String assignee = scanner.nextLine();
-            if (userController.getUser(assignee) != null) {
+            if (userController.getUser(assignee).isPresent()) {
                 task.put("assignee", assignee);
                 break;
             } else {
@@ -358,7 +359,7 @@ public class Main {
         while (true) {
             System.out.println("Enter assignee: ");
             String assignee = scanner.nextLine();
-            if (userController.getUser(assignee) != null) {
+            if (userController.getUser(assignee).isPresent()) {
                 task.setAssignee(assignee);
                 break;
             } else {

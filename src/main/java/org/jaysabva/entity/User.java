@@ -3,7 +3,7 @@ package org.jaysabva.entity;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class User {
-    private static AtomicLong id = new AtomicLong(1);
+    private static final AtomicLong id = new AtomicLong(1);
     private Long userId;
     private String userName;
     private String password;

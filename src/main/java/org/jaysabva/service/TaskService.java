@@ -4,11 +4,12 @@ import org.jaysabva.dto.TaskDto;
 import org.jaysabva.entity.Task;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskService {
     String addTask(TaskDto task);
     String updateTask(Task task);
-    Task getTask(Long id);
+    Optional<Task> getTask(Long id);
     List<Task> getAllTasks();
     String deleteTask(Long id);
 }

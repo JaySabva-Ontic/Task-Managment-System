@@ -17,15 +17,20 @@ import org.jaysabva.service.TaskService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TaskServiceImplementation implements TaskService {
 
-    private final TaskRepository taskRepository = new TaskRepositoryImplementation();
-    private final UserRepository userRepository = new UserRepositoryImplementation();
+    private final TaskRepository taskRepository = TaskRepositoryImplementation.getInstance();
+    private final UserRepository userRepository = UserRepositoryImplementation.getInstance();
 
     @Override
     public String addTask(TaskDto task) {
         try {
+            if (!userRepository.userExists(task.getAssignee())) {
+                return "Assignee does not exist";
+            }
+
             Task newTask;
             if (Objects.equals(task.getTaskType(), "Bug")) {
                 newTask = new BugTask(task.getTitle(),  task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((BugTaskDto) task).getSeverity(), ((BugTaskDto) task).getStepToReproduce(), task.getTaskType());
@@ -60,11 +65,11 @@ public class TaskServiceImplementation implements TaskService {
     }
 
     @Override
-    public Task getTask(Long id) {
+    public Optional<Task> getTask(Long id) {
         try {
             return taskRepository.getTask(id);
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
     }
 

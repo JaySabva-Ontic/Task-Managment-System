@@ -3,13 +3,21 @@ package org.jaysabva.repository.Implementation;
 import org.jaysabva.entity.Task;
 import org.jaysabva.repository.TaskRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TaskRepositoryImplementation implements TaskRepository {
     Map<Long, Task> tasks = new HashMap<>();
+
+    private static TaskRepositoryImplementation instance = null;
+    private TaskRepositoryImplementation() {
+    }
+
+    public static TaskRepositoryImplementation getInstance() {
+        if (instance == null) {
+            return new TaskRepositoryImplementation();
+        }
+        return instance;
+    }
 
     @Override
     public void addTask(Task task) {
@@ -27,8 +35,8 @@ public class TaskRepositoryImplementation implements TaskRepository {
     }
 
     @Override
-    public Task getTask(Long id) {
-        return tasks.get(id);
+    public Optional<Task> getTask(Long id) {
+        return Optional.ofNullable(tasks.get(id));
     }
 
     @Override

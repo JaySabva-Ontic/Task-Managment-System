@@ -8,10 +8,11 @@ import org.jaysabva.service.UserService;
 import org.jaysabva.util.BCryptUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserServiceImplementation implements UserService {
 
-    private final UserRepository userRepository = new UserRepositoryImplementation();
+    private final UserRepository userRepository = UserRepositoryImplementation.getInstance();
 
     @Override
     public String registerUser(UserDto userDto) {
@@ -31,11 +32,11 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User loginUser(UserDto loginInput) {
+    public Optional<User> loginUser(UserDto loginInput) {
         try {
             return userRepository.login(loginInput);
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -85,11 +86,11 @@ public class UserServiceImplementation implements UserService {
         }
     }
     @Override
-    public User getUser(String username) {
+    public Optional<User> getUser(String username) {
         try {
             return userRepository.getUser(username);
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
     }
 

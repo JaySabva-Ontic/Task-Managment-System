@@ -5,13 +5,22 @@ import org.jaysabva.entity.User;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.util.BCryptUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UserRepositoryImplementation implements UserRepository {
     Map<String, User> users = new HashMap<>();
+
+    private static UserRepositoryImplementation instance = null;
+    private UserRepositoryImplementation() {
+    }
+
+    public static UserRepositoryImplementation getInstance() {
+        if (instance == null) {
+            instance = new UserRepositoryImplementation();
+        }
+
+        return instance;
+    }
 
     @Override
     public void signUp(User user) {
@@ -24,21 +33,21 @@ public class UserRepositoryImplementation implements UserRepository {
     }
 
     @Override
-    public User login(UserDto loginInput) {
+    public Optional<User> login(UserDto loginInput) {
         String username = loginInput.username();
         String password = loginInput.password();
 
         User user = users.get(username);
         if (user != null && BCryptUtil.checkPassword(password, user.getPassword())) {
-            return user;
+            return Optional.of(user);
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public User getUser(String userName) {
-        return users.get(userName);
+    public Optional<User> getUser(String userName) {
+        return Optional.ofNullable(users.get(userName));
     }
 
     @Override

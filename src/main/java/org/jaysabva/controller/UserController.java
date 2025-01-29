@@ -6,6 +6,7 @@ import org.jaysabva.service.Implementation.UserServiceImplementation;
 import org.jaysabva.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserController {
     private final UserService userService = new UserServiceImplementation();
@@ -14,7 +15,7 @@ public class UserController {
         return userService.registerUser(signUpInput);
     }
 
-    public User loginUser(UserDto loginInput) {
+    public Optional<User> loginUser(UserDto loginInput) {
         return userService.loginUser(loginInput);
     }
 
@@ -26,7 +27,7 @@ public class UserController {
         return userService.deleteUser(user);
     }
 
-    public User getUser(String username) {
+    public Optional<User> getUser(String username) {
         return userService.getUser(username);
     }
 

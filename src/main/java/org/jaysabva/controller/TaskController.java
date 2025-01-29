@@ -6,6 +6,7 @@ import org.jaysabva.service.Implementation.TaskServiceImplementation;
 import org.jaysabva.service.TaskService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TaskController {
     private final TaskService taskService = new TaskServiceImplementation();
@@ -18,7 +19,7 @@ public class TaskController {
         return taskService.updateTask(task);
     }
 
-    public Task getTask(Long taskId) {
+    public Optional<Task> getTask(Long taskId) {
         return taskService.getTask(taskId);
     }
 
