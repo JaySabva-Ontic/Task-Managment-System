@@ -32,13 +32,14 @@ public class TaskServiceImplementation implements TaskService {
             }
 
             Task newTask;
-            if (Objects.equals(task.getTaskType(), "Bug")) {
+            if (Objects.equals(task.getTaskType(), "BUG")) {
                 newTask = new BugTask(task.getTitle(),  task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((BugTaskDto) task).getSeverity(), ((BugTaskDto) task).getStepToReproduce(), task.getTaskType());
-            } else if (Objects.equals(task.getTaskType(), "Feature")) {
+            } else if (Objects.equals(task.getTaskType(), "FEATURE")) {
                 newTask = new FeatureTask(task.getTitle(), task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((FeatureTaskDto) task).getFeatureDescription(), ((FeatureTaskDto) task).getEstimatedEffort(), task.getTaskType());
-            } else if (Objects.equals(task.getTaskType(), "Improvement")) {
+            } else if (Objects.equals(task.getTaskType(), "IMPROVEMENT")) {
                 newTask = new ImprovementTask(task.getTitle(), task.getDescription(), task.getStatus(),task.getStartDate(),  task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((ImprovementTaskDto) task).getProposedImprovement(), task.getTaskType());
             } else {
+                System.out.println("Invalid task type");
                 return "Invalid task type";
             }
 

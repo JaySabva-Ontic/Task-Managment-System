@@ -221,6 +221,20 @@ public class Main {
         return new UserDto(userName, password, role);
     }
 
+    private static String getStatus(int status) {
+        switch (status) {
+            case 1:
+                return "PENDING";
+            case 2:
+                return "IN_PROGRESS";
+            case 3:
+                return "COMPLETED";
+            case 4:
+                return "CANCELLED";
+            default:
+                return "PENDING";
+        }
+    }
     private static Map<String, Object> createTask(Scanner scanner, String username) {
         Map<String, Object> task = new HashMap<>();
 
@@ -230,8 +244,9 @@ public class Main {
         System.out.println("Enter description");
         task.put("description", scanner.nextLine());
 
-        System.out.println("Enter status: ");
-        task.put("status", scanner.nextLine());
+        System.out.println("Enter status: 1.PENDING 2.IN_PROGRESS 3.COMPLETED 4.CANCELLED");
+        int status = Integer.parseInt(scanner.nextLine());
+        task.put("status", getStatus(status));
 
         System.out.println("Enter start date: (yyyy-mm-dd");
         LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
@@ -301,7 +316,7 @@ public class Main {
             bugTask.getStepToReproduce().add(input);
         }
 
-        bugTask.setTaskType("Bug");
+        bugTask.setTaskType("BUG");
         return bugTask;
     }
 
@@ -317,7 +332,7 @@ public class Main {
         System.out.println("Enter estimated effort: ");
         featureTask.setEstimatedEffort(Duration.parse(scanner.nextLine()));
 
-        featureTask.setTaskType("Feature");
+        featureTask.setTaskType("FEATURE");
 
         return featureTask;
     }
@@ -331,7 +346,7 @@ public class Main {
         System.out.println("Enter proposed improvement: ");
         improvementTask.setProposedImprovement(scanner.nextLine());
 
-        improvementTask.setTaskType("Improvement");
+        improvementTask.setTaskType("IMPROVEMENT");
 
         return improvementTask;
     }

@@ -5,14 +5,6 @@ import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Task {
-
-    public enum Status {
-        PENDING,
-        IN_PROGRESS,
-        COMPLETED,
-        CANCELLED
-    }
-
     private static AtomicLong taskId = new AtomicLong(1);
 
     private Long id;
@@ -25,7 +17,7 @@ public abstract class Task {
     private LocalDateTime updatedAt;
     private String assignee;
     private String createdBy;
-    private String taskType;
+    private TaskType taskType;
 
     public Task() {
         this.id = taskId.longValue();
@@ -43,7 +35,7 @@ public abstract class Task {
         this.updatedAt = updatedAt;
         this.assignee = assignee;
         this.createdBy = createdBy;
-        this.taskType = taskType;
+        this.taskType = TaskType.valueOf(taskType);
 
         incrTaskId();
     }
@@ -149,11 +141,11 @@ public abstract class Task {
     }
 
     public String getTaskType() {
-        return taskType;
+        return taskType.toString();
     }
 
     public void setTaskType(String taskType) {
-        this.taskType = taskType;
+        this.taskType = TaskType.valueOf(taskType);
     }
 
     public void viewTask() {
