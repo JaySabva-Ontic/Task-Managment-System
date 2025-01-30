@@ -18,8 +18,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        userController.registerUser(new UserDto("admin", "admin", "admin"));
-        userController.registerUser(new UserDto("user", "user", "user"));
+        userController.registerUser(new UserDto("admin", "+000", "admin", "admin"));
+        userController.registerUser(new UserDto("user", "+91000", "user", "user"));
 
 
         Scanner scanner = new Scanner(System.in);
