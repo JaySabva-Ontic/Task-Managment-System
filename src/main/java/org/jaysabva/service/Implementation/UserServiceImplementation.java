@@ -8,6 +8,7 @@ import org.jaysabva.service.UserService;
 import org.jaysabva.util.BCryptUtil;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class UserServiceImplementation implements UserService {
@@ -15,19 +16,21 @@ public class UserServiceImplementation implements UserService {
     private final UserRepository userRepository = UserRepositoryImplementation.getInstance();
 
     @Override
-    public String registerUser(UserDto userDto) {
+    public Map<String, String> registerUser(UserDto userDto) {
         try {
-            if (userRepository.userExists(userDto.username())) {
-                return "User already exists";
+            if (userRepository.userExists(userDto.getUsername())) {
+                return Map.of("message", "User already exists");
+            } else if ((userDto.getUsername() == null || userDto.getPassword() == null || userDto.getRole() == null)) {
+                return Map.of("message", "Please fill in all fields");
             } else {
 
-                User user = new User(userDto.username(), BCryptUtil.hashPassword(userDto.password()), userDto.role());
+                User user = new User(userDto.getUsername(), BCryptUtil.hashPassword(userDto.getPassword()), userDto.getRole());
 
                 userRepository.signUp(user);
-                return "User registered successfully";
+                return Map.of("message", "User registered successfully");
             }
         } catch (Exception e) {
-            return "Error registering user";
+            return Map.of("message", "Error registering user");
         }
     }
 
@@ -41,34 +44,34 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public String updateUser(String username, UserDto user) {
+    public Map<String, String> updateUser(String username, UserDto user) {
         try {
             if (!userRepository.userExists(username)) {
-                return "User doesn't exists";
+                return Map.of("message", "User does not exist");
             }
-            if (userRepository.userExists(user.username())) {
-                return "User on that updated username already exists";
+            if (userRepository.userExists(user.getUsername())) {
+                return Map.of("message", "Username already exists");
             }
 
             userRepository.updateUser(username, user);
 
-            return "User updated successfully";
+            return Map.of("message", "User updated successfully");
         } catch (Exception e) {
-            return "Error updating user";
+            return Map.of("message", "Error updating user");
         }
     }
 
     @Override
-    public String deleteUser(UserDto loginInput) {
+    public Map<String, String> deleteUser(UserDto loginInput) {
         try {
-            if (userRepository.login(loginInput) != null) {
-                userRepository.deleteUser(loginInput.username());
-                return "User deleted successfully";
+            if (userRepository.login(loginInput).isPresent()) {
+                userRepository.deleteUser(loginInput.getUsername());
+                return Map.of("message", "User deleted successfully");
             } else {
-                return "Invalid credentials";
+                return Map.of("message", "User does not exist");
             }
         } catch (Exception e) {
-            return "Error deleting user";
+            return Map.of("message", "Error deleting user");
         }
     }
 
@@ -104,16 +107,16 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public String deleteUserAdmin(String username) {
+    public Map<String, String> deleteUserAdmin(String username) {
         try {
             if (userRepository.userExists(username)) {
                 userRepository.deleteUser(username);
-                return "User deleted successfully";
+                return Map.of("message", "User deleted successfully");
             } else {
-                return "User does not exist";
+                return Map.of("message", "User does not exist");
             }
         } catch (Exception e) {
-            return "Error deleting user";
+            return Map.of("message", "Error deleting user");
         }
     }
 }

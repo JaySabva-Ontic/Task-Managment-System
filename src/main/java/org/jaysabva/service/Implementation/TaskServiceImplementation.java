@@ -16,6 +16,7 @@ import org.jaysabva.service.TaskService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,10 +26,10 @@ public class TaskServiceImplementation implements TaskService {
     private final UserRepository userRepository = UserRepositoryImplementation.getInstance();
 
     @Override
-    public String addTask(TaskDto task) {
+    public Map<String, String> addTask(TaskDto task) {
         try {
             if (!userRepository.userExists(task.getAssignee())) {
-                return "Assignee does not exist";
+                return Map.of("message", "Assignee does not exist");
             }
 
             Task newTask;
@@ -40,28 +41,28 @@ public class TaskServiceImplementation implements TaskService {
                 newTask = new ImprovementTask(task.getTitle(), task.getDescription(), task.getStatus(),task.getStartDate(),  task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((ImprovementTaskDto) task).getProposedImprovement(), task.getTaskType());
             } else {
                 System.out.println("Invalid task type");
-                return "Invalid task type";
+                return Map.of("message", "Invalid task type");
             }
 
             taskRepository.addTask(newTask);
 
-            return "Task added successfully";
+            return Map.of("message", "Task added successfully");
         } catch (Exception e) {
-            return "Error adding task";
+            return Map.of("message", "Error adding task");
         }
     }
 
     @Override
-    public String updateTask(Task task) {
+    public Map<String, String> updateTask(Task task) {
         try {
             if (!taskRepository.isTaskExists(task.getId())) {
-                return "Task does not exist";
+                return Map.of("message", "Task does not exist");
             }
-
+            Task oldTask = taskRepository.getTask(task.getId()).get();
             taskRepository.updateTask(task);
-            return "Task updated successfully";
+            return Map.of("message", "Task updated successfully");
         } catch (Exception e) {
-            return "Error updating task";
+            return Map.of("message", "Error updating task");
         }
     }
 
@@ -84,16 +85,16 @@ public class TaskServiceImplementation implements TaskService {
     }
 
     @Override
-    public String deleteTask(Long id) {
+    public Map<String, String> deleteTask(Long id) {
         try {
             if (!taskRepository.isTaskExists(id)) {
-                return "Task does not exist";
+                return Map.of("message", "Task does not exist");
             }
 
             taskRepository.deleteTask(id);
-            return "Task deleted successfully";
+            return Map.of("message", "Task deleted successfully");
         } catch (Exception e) {
-            return "Error deleting task";
+            return Map.of("message", "Error deleting task");
         }
     }
 }

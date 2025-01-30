@@ -6,16 +6,17 @@ import org.jaysabva.service.Implementation.TaskServiceImplementation;
 import org.jaysabva.service.TaskService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class TaskController {
     private final TaskService taskService = new TaskServiceImplementation();
 
-    public String addTask(TaskDto task) {
+    public Map<String, String> addTask(TaskDto task) {
         return taskService.addTask(task);
     }
 
-    public String updateTask(Task task) {
+    public Map<String, String> updateTask(Task task) {
         return taskService.updateTask(task);
     }
 
@@ -27,7 +28,7 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    public String deleteTask(Long taskId) {
+    public Map<String, String> deleteTask(Long taskId) {
         return taskService.deleteTask(taskId);
     }
 }

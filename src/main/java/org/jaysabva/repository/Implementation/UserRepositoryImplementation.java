@@ -34,8 +34,8 @@ public class UserRepositoryImplementation implements UserRepository {
 
     @Override
     public Optional<User> login(UserDto loginInput) {
-        String username = loginInput.username();
-        String password = loginInput.password();
+        String username = loginInput.getUsername();
+        String password = loginInput.getPassword();
 
         User user = users.get(username);
         if (user != null && BCryptUtil.checkPassword(password, user.getPassword())) {
@@ -54,12 +54,12 @@ public class UserRepositoryImplementation implements UserRepository {
     public void updateUser(String username, UserDto user) {
         if (users.containsKey(username)) {
             User oldUser = users.get(username);
-            oldUser.setUserName(user.username());
-            oldUser.setPassword(user.password());
-            oldUser.setRole(user.role());
+            oldUser.setUserName(user.getUsername());
+            oldUser.setPassword(user.getPassword());
+            oldUser.setRole(user.getRole());
 
             users.remove(username);
-            users.put(user.username(), oldUser);
+            users.put(user.getUsername(), oldUser);
         }
     }
 
