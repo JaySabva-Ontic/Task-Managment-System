@@ -1,12 +1,14 @@
 package org.jaysabva;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jaysabva.controller.TaskController;
 import org.jaysabva.controller.UserController;
 import org.jaysabva.dto.*;
 import org.jaysabva.entity.*;
 
+import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,7 +26,7 @@ public class Main {
 
         while (true) {
 
-            Optional<User> loggedInUser = Optional.empty();
+            Optional<User> loggedInUser;
             while (true) {
                 try {
                     UserDto loginInput = loginInput(scanner);
@@ -44,11 +46,13 @@ public class Main {
             if (loggedInUser.get().getRole().equals("admin")) {
                 while (true) {
                     try {
-                        System.out.print("1 - Create User\n" +
-                                "2 - Update User\n" +
-                                "3 - Delete User\n" +
-                                "4 - Get All Users\n" +
-                                "5 - Task Related\n");
+                        System.out.print("""
+                                1 - Create User
+                                2 - Update User
+                                3 - Delete User
+                                4 - Get All Users
+                                5 - Task Related
+                                """);
 //                                "6 - Logout\n");
 
                         int option = Integer.parseInt(scanner.nextLine());
@@ -60,8 +64,8 @@ public class Main {
                         switch (option) {
                             case 1:
                                 signUpInput = signUpInput(scanner);
-                                userController.registerUser(signUpInput);
-
+                                Map<String, String> response = userController.registerUser(signUpInput);
+                                System.out.println(response.get("message"));
                                 break;
                             case 2:
                                 do {
@@ -71,14 +75,14 @@ public class Main {
 
                                 signUpInput = signUpInput(scanner);
 
-                                System.out.println(userController.updateUser(username, signUpInput));
+                                System.out.println(userController.updateUser(username, signUpInput).get("message"));
 
                                 break;
                             case 3:
                                 System.out.println("Enter username to delete: ");
                                 username = scanner.nextLine();
 
-                                System.out.println(userController.deleteUserAdmin(username));
+                                System.out.println(userController.deleteUserAdmin(username).get("message"));
 
                                 break;
                             case 4:
@@ -100,36 +104,41 @@ public class Main {
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input. Please enter a valid option.");
                         scanner.nextLine();
+                    } catch (Exception e) {
+                        scanner.nextLine();
                     }
                 }
             }
 
             while (true) {
                 try {
-                    System.out.println("1 - Create Task\n" +
-                            "2 - Update Task\n" +
-                            "3 - Delete Task\n" +
-                            "4 - View Task\n" +
-                            "5 - View All Tasks\n" +
-                            "6 - Logout");
+                    System.out.println("""
+                            1 - Create Task
+                            2 - Update Task
+                            3 - Delete Task
+                            4 - View Task
+                            5 - View All Tasks
+                            6 - Logout""");
                     int option = Integer.parseInt(scanner.nextLine());
-
+                    long taskId;
                     switch (option) {
                         case 1:
-                            System.out.println("1 - Bug Task\n" +
-                                    "2 - Feature Task\n" +
-                                    "3 - Improvement Task");
+                            System.out.println("""
+                                    1 - Bug Task
+                                    2 - Feature Task
+                                    3 - Improvement Task""");
                             option = Integer.parseInt(scanner.nextLine());
 
+                            String username = loggedInUser.map(User::getUserName).orElseThrow(() -> new RuntimeException("User not found"));
                             switch (option) {
                                 case 1:
-                                    taskController.addTask(createBugTask(scanner, loggedInUser.get().getUserName()));
+                                    System.out.println(taskController.addTask(createBugTask(scanner, username)).get("message"));
                                     break;
                                 case 2:
-                                    taskController.addTask(createFeatureTask(scanner, loggedInUser.get().getUserName()));
+                                    System.out.println(taskController.addTask(createFeatureTask(scanner, username)).get("message"));
                                     break;
                                 case 3:
-                                    taskController.addTask(createImprovementTask(scanner, loggedInUser.get().getUserName()));
+                                    System.out.println(taskController.addTask(createImprovementTask(scanner, username)).get("message"));
                                     break;
                                 default:
                                     System.out.println("Invalid task type. Please try again.");
@@ -137,7 +146,7 @@ public class Main {
                             break;
                         case 2:
                             System.out.println("Enter Task ID to update: ");
-                            long taskId = Long.parseLong(scanner.nextLine());
+                            taskId = Long.parseLong(scanner.nextLine());
                             Optional<Task> taskToUpdate = taskController.getTask(taskId);
 
                             if (taskToUpdate.isEmpty()) {
@@ -154,7 +163,7 @@ public class Main {
                             System.out.println("Enter Task ID to delete: ");
                             taskId = Long.parseLong(scanner.nextLine());
 
-                            System.out.println(taskController.deleteTask(taskId));
+                            System.out.println(taskController.deleteTask(taskId).get("message"));
                             break;
                         case 4:
                             System.out.println("Enter Task ID to view: ");
@@ -193,47 +202,48 @@ public class Main {
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please enter a valid number.");
                     scanner.nextLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
     }
 
+    private static String jsonInput(Scanner scanner) {
+        System.out.println("Enter json");
+        return scanner.nextLine();
+    }
     private static UserDto loginInput(Scanner scanner) {
-        System.out.println("Enter your username: ");
-        String userName = scanner.nextLine();
+//        take json input from command line using jackson
+        System.out.println("Enter username and password json");
+        String inputJson = jsonInput(scanner);
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(inputJson, UserDto.class);
+        } catch (IOException e) {
+            return loginInput(scanner);
+        }
 
-        System.out.println("Enter your password: ");
-        String password = scanner.nextLine();
-
-        return new UserDto(userName, password, "");
     }
 
     private static UserDto signUpInput(Scanner scanner) {
-        System.out.println("Enter your username: ");
-        String userName = scanner.nextLine();
+        System.out.println("Enter username, password, role json");
+        String inputJson = jsonInput(scanner);
 
-        System.out.println("Enter your password: ");
-        String password = scanner.nextLine();
-
-        System.out.println("Enter your role: ");
-        String role = scanner.nextLine();
-
-        return new UserDto(userName, password, role);
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(inputJson, UserDto.class);
+        } catch (IOException e) {
+            return signUpInput(scanner);
+        }
     }
 
     private static String getStatus(int status) {
-        switch (status) {
-            case 1:
-                return "PENDING";
-            case 2:
-                return "IN_PROGRESS";
-            case 3:
-                return "COMPLETED";
-            case 4:
-                return "CANCELLED";
-            default:
-                return "PENDING";
-        }
+        return switch (status) {
+            case 1 -> "PENDING";
+            case 2 -> "IN_PROGRESS";
+            case 3 -> "COMPLETED";
+            case 4 -> "CANCELLED";
+            default -> "PENDING";
+        };
     }
     private static Map<String, Object> createTask(Scanner scanner, String username) {
         Map<String, Object> task = new HashMap<>();
@@ -282,73 +292,43 @@ public class Main {
         taskType.setTitle((String) task.get("title"));
         taskType.setDescription((String) task.get("description"));
         taskType.setStatus((String) task.get("status"));
-        taskType.setStartDate((LocalDateTime) task.get("startDate"));
-        taskType.setDueDate((LocalDateTime) task.get("dueDate"));
-        taskType.setCreatedAt((LocalDateTime) task.get("createdAt"));
-        taskType.setUpdatedAt((LocalDateTime) task.get("updatedAt"));
+//        taskType.setStartDate((LocalDateTime) task.get("startDate"));
+//        taskType.setDueDate((LocalDateTime) task.get("dueDate"));
+//        taskType.setCreatedAt((LocalDateTime) task.get("createdAt"));
+//        taskType.setUpdatedAt((LocalDateTime) task.get("updatedAt"));
         taskType.setAssignee((String) task.get("assignee"));
         taskType.setCreatedBy((String) task.get("createdBy"));
         taskType.setTaskType((String) task.get("taskType"));
     }
 
-    private static BugTaskDto createBugTask(Scanner scanner, String username) {
-        BugTaskDto bugTask = new BugTaskDto();
-        Map<String, Object> task = createTask(scanner, username);
-        fieldAssignment(task, bugTask);
-
-        System.out.println("Enter severity: ");
-        bugTask.setSeverity(scanner.nextLine());
-
-        System.out.println("Enter step to reproduce: (q: to exit)");
-        String input;
-        long cnt = 0;
-        while (true) {
-            System.out.println("Step " + ++cnt + ": ");
-            input = scanner.nextLine();
-
-            if (input.equals("q:")) {
-                break;
-            }
-
-            if (input.isBlank()) {
-                continue;
-            }
-            bugTask.getStepToReproduce().add(input);
+    private static BugTaskDto createBugTask(Scanner scanner, String username) throws IOException {
+        String inputJson = jsonInput(scanner);
+        System.out.println(inputJson);
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(inputJson, BugTaskDto.class);
+        } catch (IOException e) {
+            return createBugTask(scanner, username);
         }
-
-        bugTask.setTaskType("BUG");
-        return bugTask;
     }
 
-    private static FeatureTaskDto createFeatureTask(Scanner scanner, String username) {
-        FeatureTaskDto featureTask = new FeatureTaskDto();
-
-        Map<String, Object> task = createTask(scanner, username);
-        fieldAssignment(task, featureTask);
-
-        System.out.println("Enter feature description: ");
-        featureTask.setFeatureDescription(scanner.nextLine());
-
-        System.out.println("Enter estimated effort: (hours)");
-        featureTask.setEstimatedEffort(Duration.parse("PT" + scanner.nextLine() + "H"));
-
-        featureTask.setTaskType("FEATURE");
-
-        return featureTask;
+    private static FeatureTaskDto createFeatureTask(Scanner scanner, String username) throws IOException {
+        String inputJson = jsonInput(scanner);
+        System.out.println(inputJson);
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(inputJson, FeatureTaskDto.class);
+        } catch (IOException e) {
+            return createFeatureTask(scanner, username);
+        }
     }
 
-    private static ImprovementTaskDto createImprovementTask(Scanner scanner, String username) {
-        ImprovementTaskDto improvementTask = new ImprovementTaskDto();
-
-        Map<String, Object> task = createTask(scanner, username);
-        fieldAssignment(task, improvementTask);
-
-        System.out.println("Enter proposed improvement: ");
-        improvementTask.setProposedImprovement(scanner.nextLine());
-
-        improvementTask.setTaskType("IMPROVEMENT");
-
-        return improvementTask;
+    private static ImprovementTaskDto createImprovementTask(Scanner scanner, String username) throws IOException {
+        String inputJson = jsonInput(scanner);
+        System.out.println(inputJson);
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(inputJson, ImprovementTaskDto.class);
+        } catch (IOException e) {
+            return createImprovementTask(scanner, username);
+        }
     }
 
     private static Task updateTask(Task task, Scanner scanner) {
