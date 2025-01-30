@@ -18,13 +18,13 @@ public class UserServiceImplementation implements UserService {
     @Override
     public Map<String, String> registerUser(UserDto userDto) {
         try {
-            if (userRepository.userExists(userDto.getUsername())) {
+            if (userRepository.userExists(userDto.getUsername()) || userRepository.userExists(userDto.getPhoneno())) {
                 return Map.of("message", "User already exists");
-            } else if ((userDto.getUsername() == null || userDto.getPassword() == null || userDto.getRole() == null)) {
+            } else if ((userDto.getUsername() == null || userDto.getPhoneno() == null|| userDto.getPassword() == null || userDto.getRole() == null)) {
                 return Map.of("message", "Please fill in all fields");
             } else {
 
-                User user = new User(userDto.getUsername(), BCryptUtil.hashPassword(userDto.getPassword()), userDto.getRole());
+                User user = new User(userDto.getUsername(), userDto.getPhoneno(), BCryptUtil.hashPassword(userDto.getPassword()), userDto.getRole());
 
                 userRepository.signUp(user);
                 return Map.of("message", "User registered successfully");
