@@ -10,8 +10,9 @@ import java.util.*;
 
 @Repository
 public class UserRepositoryImplementation implements UserRepository {
-    Map<String, User> user_username = new HashMap<>();
-    Map<String, User> user_phoneno = new HashMap<>();
+    List<User> users = new ArrayList<>();
+    Map<String, Long> userUsername = new HashMap<>();
+    Map<String, Long> userPhoneno = new HashMap<>();
 
     private static UserRepositoryImplementation instance = null;
     public UserRepositoryImplementation() {
@@ -27,13 +28,18 @@ public class UserRepositoryImplementation implements UserRepository {
 
     @Override
     public void signUp(User user) {
-        user_username.put(user.getUserName(), user);
-        user_phoneno.put(user.getPhoneno(), user);
+        users.add(user);
+        userUsername.put(user.getUserName(), users.size() - 1L);
+        userPhoneno.put(user.getPhoneno(), users.size() - 1L);
     }
 
     @Override
-    public boolean userExists(String Key) {
-        return user_username.containsKey(Key) || user_phoneno.containsKey(Key);
+    public boolean userExists(String key) {
+        Long indexFromUsername = userUsername.get(key);
+        Long indexFromPhoneNo = userPhoneno.get(key);
+
+        return (indexFromUsername != null && indexFromUsername >= 0 && indexFromUsername < users.size() && users.get(indexFromUsername.intValue()) != null) ||
+                (indexFromPhoneNo != null && indexFromPhoneNo >= 0 && indexFromPhoneNo < users.size() && users.get(indexFromPhoneNo.intValue()) != null);
     }
 
     @Override
@@ -42,7 +48,20 @@ public class UserRepositoryImplementation implements UserRepository {
         String password = loginInput.getPassword();
         String phoneno = loginInput.getPhoneno();
 
-        User user = user_username.get(username) != null ? user_username.get(username) : user_phoneno.get(phoneno);
+        User user = null;
+
+        Long usernameIndex = userUsername.get(username);
+        if (usernameIndex != null && usernameIndex >= 0 && usernameIndex < users.size()) {
+            user = users.get(usernameIndex.intValue());
+        }
+
+        if (user == null) {
+            Long phoneNoIndex = userPhoneno.get(phoneno);
+            if (phoneNoIndex != null && phoneNoIndex >= 0 && phoneNoIndex < users.size()) {
+                user = users.get(phoneNoIndex.intValue());
+            }
+        }
+
         if (user != null && BCryptUtil.checkPassword(password, user.getPassword())) {
             return Optional.of(user);
         }
@@ -51,35 +70,43 @@ public class UserRepositoryImplementation implements UserRepository {
     }
 
     @Override
-    public Optional<User> getUser(String Key) {
-        return Optional.ofNullable(user_username.get(Key)).isPresent() ? Optional.ofNullable(user_username.get(Key)) : Optional.ofNullable(user_phoneno.get(Key));
+    public Optional<User> getUser(String key) {
+        return Optional.ofNullable(userUsername.get(key)).isPresent() ? Optional.ofNullable(users.get(userUsername.get(key).intValue())) : Optional.ofNullable(users.get(userPhoneno.get(key).intValue()));
     }
 
     @Override
-    public void updateUser(String Key, UserDto user) {
-        User oldUser = user_username.get(Key) != null ? user_username.get(Key) : user_phoneno.get(Key);
+    public void updateUser(String key, UserDto user) {
+//        User oldUser = userUsername.get(key) != null ? userUsername.get(key) : userPhoneno.get(key);
+        int idx = userUsername.get(key) != null ? userUsername.get(key).intValue() : userPhoneno.get(key).intValue();
+        User oldUser = users.get(idx);
         if (oldUser != null) {
-            user_username.remove(oldUser.getUserName());
-            user_phoneno.remove(oldUser.getPhoneno());
+            userUsername.remove(oldUser.getUserName());
+            userPhoneno.remove(oldUser.getPhoneno());
 
             oldUser.setUserName(user.getUsername() != null ? user.getUsername() : oldUser.getUserName());
             oldUser.setPhoneno(user.getPhoneno() != null ? user.getPhoneno() : oldUser.getPhoneno());
             oldUser.setPassword(user.getPassword() != null ? BCryptUtil.hashPassword(user.getPassword()) : oldUser.getPassword());
             oldUser.setRole(user.getRole() != null ? user.getRole() : oldUser.getRole());
 
-            user_username.put(oldUser.getUserName(), oldUser);
-            user_phoneno.put(oldUser.getPhoneno(), oldUser);
+            userUsername.put(oldUser.getUserName(), (long) idx);
+            userPhoneno.put(oldUser.getPhoneno(), (long) idx);
         }
     }
 
     @Override
-    public void deleteUser(String Key) {
-        user_username.remove(Key);
-        user_phoneno.remove(Key);
+    public void deleteUser(String key) {
+        if (userUsername.get(key) != null) {
+            users.remove(userUsername.get(key).intValue());
+        } else {
+            users.remove(userPhoneno.get(key).intValue());
+        }
+
+        userUsername.remove(key);
+        userPhoneno.remove(key);
     }
 
     @Override
     public List<User> getUsers() {
-        return new ArrayList<>(user_username.values());
+        return new ArrayList<>(users);
     }
 }
