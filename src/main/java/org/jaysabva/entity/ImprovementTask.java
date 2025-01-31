@@ -10,8 +10,8 @@ public class ImprovementTask extends Task {
         super();
     }
 
-    public ImprovementTask(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String proposedImprovement, String taskType) {
-        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType);
+    public ImprovementTask(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String proposedImprovement, String taskType, Long storyPoints) {
+        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints);
         this.proposedImprovement = proposedImprovement;
     }
 

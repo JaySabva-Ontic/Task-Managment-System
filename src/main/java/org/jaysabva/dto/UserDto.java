@@ -2,6 +2,8 @@ package org.jaysabva.dto;
 
 public class UserDto {
     private String username;
+    private String firstName;
+    private String lastName;
     private String phoneno;
     private String password;
     private String role;
@@ -9,8 +11,10 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String username, String phoneno, String password, String role) {
+    public UserDto(String username, String firstName, String lastName, String phoneno, String password, String role) {
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneno = phoneno;
         this.password = password;
         this.role = role;
@@ -22,6 +26,22 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhoneno() {

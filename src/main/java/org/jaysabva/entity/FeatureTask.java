@@ -11,8 +11,8 @@ public class FeatureTask extends Task {
         super();
     }
 
-    public FeatureTask(String title, String description, String status,LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String featureDescription, Duration estimatedEffort, String taskType) {
-        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType);
+    public FeatureTask(String title, String description, String status,LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String featureDescription, Duration estimatedEffort, String taskType, Long storyPoints) {
+        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints);
         this.featureDescription = featureDescription;
         this.estimatedEffort = estimatedEffort;
     }

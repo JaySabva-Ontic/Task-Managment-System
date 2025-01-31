@@ -18,13 +18,14 @@ public abstract class Task {
     private String assignee;
     private String createdBy;
     private TaskType taskType;
+    private Long storyPoints;
 
     public Task() {
         this.id = taskId.longValue();
         incrTaskId();
     }
 
-    public Task(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType) {
+    public Task(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType, Long storyPoints) {
         this.id = taskId.longValue();
         this.title = title;
         this.description = description;
@@ -36,6 +37,7 @@ public abstract class Task {
         this.assignee = assignee;
         this.createdBy = createdBy;
         this.taskType = TaskType.valueOf(taskType);
+        this.storyPoints = storyPoints;
 
         incrTaskId();
     }
@@ -148,11 +150,20 @@ public abstract class Task {
         this.taskType = TaskType.valueOf(taskType);
     }
 
+    public Long getStoryPoints() {
+        return storyPoints;
+    }
+
+    public void setStoryPoints(Long storyPoints) {
+        this.storyPoints = storyPoints;
+    }
+
     public void viewTask() {
         System.out.println("Id: " + getId());
         System.out.println("Task Type: " + getTaskType());
         System.out.println("Title: " + getTitle());
         System.out.println("Description: " + getDescription());
+        System.out.println("Story Points: " + getStoryPoints());
         System.out.println("Status: " + getStatus());
         System.out.println("Start Date: " + getStartDate());
         System.out.println("Due Date: " + getDueDate());

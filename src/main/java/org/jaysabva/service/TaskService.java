@@ -15,4 +15,7 @@ public interface TaskService {
     Optional<Task> getTask(Long id);
     List<Task> getAllTasks();
     Map<String, String> deleteTask(Long id);
+    List<Task> getTasksByStoryPoints(Long storyPoints);
+    Map<Long, List<Task>> getTaskByStoryPoints();
+    Map<Long, List<Task>> getTasksByStoryPointsRange(Long start, Long end);
 }

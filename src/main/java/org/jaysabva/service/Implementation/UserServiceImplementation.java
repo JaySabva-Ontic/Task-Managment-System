@@ -31,7 +31,7 @@ public class UserServiceImplementation implements UserService {
                 return Map.of("message", "Please fill in all fields");
             } else {
 
-                User user = new User(userDto.getUsername(), userDto.getPhoneno(), BCryptUtil.hashPassword(userDto.getPassword()), userDto.getRole());
+                User user = new User(userDto.getUsername(), userDto.getFirstName(), userDto.getLastName(),  userDto.getPhoneno(), BCryptUtil.hashPassword(userDto.getPassword()), userDto.getRole());
 
                 userRepository.signUp(user);
                 return Map.of("message", "User registered successfully");
@@ -64,6 +64,7 @@ public class UserServiceImplementation implements UserService {
 
             return Map.of("message", "User updated successfully");
         } catch (Exception e) {
+            System.out.println(e);
             return Map.of("message", "Error updating user");
         }
     }

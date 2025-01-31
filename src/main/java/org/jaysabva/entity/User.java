@@ -6,6 +6,8 @@ public class User {
     private static final AtomicLong id = new AtomicLong(1);
     private Long userId;
     private String userName;
+    private String firstName;
+    private String lastName;
     private String phoneno;
     private String password;
     private String role;
@@ -13,9 +15,11 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String phoneno, String password, String role) {
+    public User(String userName, String firstName, String lastName, String phoneno, String password, String role) {
         this.userId = id.longValue();
         this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneno = phoneno;
         this.password = password;
         this.role = role;
@@ -28,6 +32,8 @@ public class User {
         return "User{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", phoneno='" + phoneno + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
@@ -52,6 +58,22 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhoneno() {

@@ -49,4 +49,19 @@ public class TaskController {
     public Map<String, String> deleteTask(@PathVariable Long taskId) {
         return taskService.deleteTask(taskId);
     }
+
+    @GetMapping("/getTasksByStoryPoints/{storyPoints}")
+    public List<Task> getTasksByStoryPoints(@PathVariable Long storyPoints) {
+        return taskService.getTasksByStoryPoints(storyPoints);
+    }
+
+    @GetMapping("/getTasksByStoryPoints")
+    public Map<Long, List<Task>> getTasksByStoryPoints() {
+        return taskService.getTaskByStoryPoints();
+    }
+
+    @GetMapping("/getTasksByStoryPointsRange/")
+    public Map<Long, List<Task>> getTasksByStoryPointsRange(@RequestParam("start") Long start, @RequestParam("end") Long end) {
+        return taskService.getTasksByStoryPointsRange(start, end);
+    }
 }

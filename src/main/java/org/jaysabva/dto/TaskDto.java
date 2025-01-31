@@ -32,6 +32,7 @@ public abstract class TaskDto {
     private String assignee;
     private String createdBy;
     private String taskType;
+    private Long storyPoints;
 
     public Long getId() {
         return id;
@@ -119,5 +120,13 @@ public abstract class TaskDto {
 
     public void setTaskType(String taskType) {
         this.taskType = taskType;
+    }
+
+    public Long getStoryPoints() {
+        return storyPoints;
+    }
+
+    public void setStoryPoints(Long storyPoints) {
+        this.storyPoints = storyPoints;
     }
 }

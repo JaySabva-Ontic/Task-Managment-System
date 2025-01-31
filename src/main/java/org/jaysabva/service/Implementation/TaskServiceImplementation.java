@@ -43,11 +43,11 @@ public class TaskServiceImplementation implements TaskService {
 
             Task newTask;
             if (Objects.equals(task.getTaskType(), "BUG")) {
-                newTask = new BugTask(task.getTitle(),  task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((BugTaskDto) task).getSeverity(), ((BugTaskDto) task).getStepToReproduce(), task.getTaskType());
+                newTask = new BugTask(task.getTitle(),  task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((BugTaskDto) task).getSeverity(), ((BugTaskDto) task).getStepToReproduce(), task.getTaskType(), task.getStoryPoints());
             } else if (Objects.equals(task.getTaskType(), "FEATURE")) {
-                newTask = new FeatureTask(task.getTitle(), task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((FeatureTaskDto) task).getFeatureDescription(), ((FeatureTaskDto) task).getEstimatedEffort(), task.getTaskType());
+                newTask = new FeatureTask(task.getTitle(), task.getDescription(), task.getStatus(), task.getStartDate(), task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((FeatureTaskDto) task).getFeatureDescription(), ((FeatureTaskDto) task).getEstimatedEffort(), task.getTaskType(), task.getStoryPoints());
             } else if (Objects.equals(task.getTaskType(), "IMPROVEMENT")) {
-                newTask = new ImprovementTask(task.getTitle(), task.getDescription(), task.getStatus(),task.getStartDate(),  task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((ImprovementTaskDto) task).getProposedImprovement(), task.getTaskType());
+                newTask = new ImprovementTask(task.getTitle(), task.getDescription(), task.getStatus(),task.getStartDate(),  task.getDueDate(), task.getCreatedAt(), task.getUpdatedAt(), task.getAssignee(), task.getCreatedBy(), ((ImprovementTaskDto) task).getProposedImprovement(), task.getTaskType(), task.getStoryPoints());
             } else {
                 System.out.println("Invalid task type");
                 return Map.of("message", "Invalid task type");
@@ -67,29 +67,7 @@ public class TaskServiceImplementation implements TaskService {
             if (!taskRepository.isTaskExists(task.getId())) {
                 return Map.of("message", "Task does not exist");
             }
-            Task oldTask = taskRepository.getTask(task.getId()).get();
-            oldTask.setTitle(task.getTitle());
-            oldTask.setDescription(task.getDescription());
-            oldTask.setStatus(task.getStatus());
-            oldTask.setStartDate(task.getStartDate());
-            oldTask.setDueDate(task.getDueDate());
-            oldTask.setUpdatedAt(LocalDateTime.now());
-            oldTask.setAssignee(task.getAssignee());
-            oldTask.setCreatedBy(task.getCreatedBy());
-
-            if (Objects.equals(task.getTaskType(), "BUG")) {
-                ((BugTask) oldTask).setSeverity(((BugTaskDto) task).getSeverity());
-                ((BugTask) oldTask).setStepToReproduce(((BugTaskDto) task).getStepToReproduce());
-            } else if (Objects.equals(task.getTaskType(), "FEATURE")) {
-                ((FeatureTask) oldTask).setFeatureDescription(((FeatureTaskDto) task).getFeatureDescription());
-                ((FeatureTask) oldTask).setEstimatedEffort(((FeatureTaskDto) task).getEstimatedEffort());
-            } else if (Objects.equals(task.getTaskType(), "IMPROVEMENT")) {
-                ((ImprovementTask) oldTask).setProposedImprovement(((ImprovementTaskDto) task).getProposedImprovement());
-            } else {
-                System.out.println("Invalid task type");
-                return Map.of("message", "Invalid task type");
-            }
-
+            taskRepository.updateTask(task);
             return Map.of("message", "Task updated successfully");
         } catch (Exception e) {
             return Map.of("message", "Error updating task");
@@ -125,6 +103,33 @@ public class TaskServiceImplementation implements TaskService {
             return Map.of("message", "Task deleted successfully");
         } catch (Exception e) {
             return Map.of("message", "Error deleting task");
+        }
+    }
+
+    @Override
+    public List<Task> getTasksByStoryPoints(Long storyPoints) {
+        try {
+            return taskRepository.getTasksByStoryPoint(storyPoints);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Map<Long, List<Task>> getTaskByStoryPoints() {
+        try {
+            return taskRepository.getTasksByStoryPoints();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Map<Long, List<Task>> getTasksByStoryPointsRange(Long start, Long end) {
+        try {
+            return taskRepository.getTasksByStoryPointsRange(start, end);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

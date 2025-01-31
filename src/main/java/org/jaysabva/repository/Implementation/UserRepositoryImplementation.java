@@ -1,5 +1,6 @@
 package org.jaysabva.repository.Implementation;
 
+import lombok.Synchronized;
 import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 import org.jaysabva.repository.UserRepository;
@@ -77,28 +78,36 @@ public class UserRepositoryImplementation implements UserRepository {
     @Override
     public void updateUser(String key, UserDto user) {
 //        User oldUser = userUsername.get(key) != null ? userUsername.get(key) : userPhoneno.get(key);
+
         int idx = userUsername.get(key) != null ? userUsername.get(key).intValue() : userPhoneno.get(key).intValue();
         User oldUser = users.get(idx);
-        if (oldUser != null) {
-            userUsername.remove(oldUser.getUserName());
-            userPhoneno.remove(oldUser.getPhoneno());
+        synchronized (oldUser.getUserId()) {
+            String username = oldUser.getUserName();
+            String phoneno = oldUser.getPhoneno();
+            if (oldUser != null) {
 
-            oldUser.setUserName(user.getUsername() != null ? user.getUsername() : oldUser.getUserName());
-            oldUser.setPhoneno(user.getPhoneno() != null ? user.getPhoneno() : oldUser.getPhoneno());
-            oldUser.setPassword(user.getPassword() != null ? BCryptUtil.hashPassword(user.getPassword()) : oldUser.getPassword());
-            oldUser.setRole(user.getRole() != null ? user.getRole() : oldUser.getRole());
+                oldUser.setUserName(user.getUsername() != null ? user.getUsername() : oldUser.getUserName());
+                oldUser.setFirstName(user.getFirstName() != null ? user.getFirstName() : oldUser.getFirstName());
+                oldUser.setLastName(user.getLastName() != null ? user.getLastName() : oldUser.getLastName());
+                oldUser.setPhoneno(user.getPhoneno() != null ? user.getPhoneno() : oldUser.getPhoneno());
+                oldUser.setPassword(user.getPassword() != null ? BCryptUtil.hashPassword(user.getPassword()) : oldUser.getPassword());
+                oldUser.setRole(user.getRole() != null ? user.getRole() : oldUser.getRole());
 
-            userUsername.put(oldUser.getUserName(), (long) idx);
-            userPhoneno.put(oldUser.getPhoneno(), (long) idx);
+                userUsername.remove(username);
+                userUsername.put(oldUser.getUserName(), (long) idx);
+                userPhoneno.remove(phoneno);
+                userPhoneno.put(oldUser.getPhoneno(), (long) idx);
+            }
+
         }
     }
 
     @Override
     public void deleteUser(String key) {
         if (userUsername.get(key) != null) {
-            users.remove(userUsername.get(key).intValue());
+            users.set(userUsername.get(key).intValue(), null);
         } else {
-            users.remove(userPhoneno.get(key).intValue());
+            users.set(userPhoneno.get(key).intValue(), null);
         }
 
         userUsername.remove(key);
