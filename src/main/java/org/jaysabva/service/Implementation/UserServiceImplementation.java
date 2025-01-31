@@ -6,14 +6,21 @@ import org.jaysabva.repository.Implementation.UserRepositoryImplementation;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.service.UserService;
 import org.jaysabva.util.BCryptUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Service
 public class UserServiceImplementation implements UserService {
 
-    private final UserRepository userRepository = UserRepositoryImplementation.getInstance();
+    private final UserRepository userRepository;
+    @Autowired
+    public UserServiceImplementation(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Map<String, String> registerUser(UserDto userDto) {
@@ -60,6 +67,32 @@ public class UserServiceImplementation implements UserService {
             return Map.of("message", "Error updating user");
         }
     }
+
+//    @Override
+//    public Map<String, String> updateUser1(String username, UserDto user) {
+//        Thread thread1 = new Thread(() -> {
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            user.setUsername("abcd123");
+//            userRepository.updateUser(username, user);
+//        });
+//
+//        Thread thread2 = new Thread(() -> {
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            user.setPhoneno("123123123");
+//            userRepository.updateUser(username, user);
+//        });
+//
+//        thread1.start();
+//        thread2.start();
+//    }
 
     @Override
     public Map<String, String> deleteUser(UserDto loginInput) {

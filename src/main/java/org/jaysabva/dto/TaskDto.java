@@ -1,8 +1,26 @@
 package org.jaysabva.dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
-public class TaskDto {
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = As.PROPERTY,
+        property = "taskType",
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = BugTaskDto.class, name = "BUG"),
+        @JsonSubTypes.Type(value = FeatureTaskDto.class, name = "FEATURE"),
+        @JsonSubTypes.Type(value = ImprovementTaskDto.class, name = "IMPROVEMENT")
+})
+public abstract class TaskDto {
     private Long id;
     private String title;
     private String description;

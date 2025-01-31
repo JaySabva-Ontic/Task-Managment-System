@@ -2,9 +2,11 @@ package org.jaysabva.repository.Implementation;
 
 import org.jaysabva.entity.Task;
 import org.jaysabva.repository.TaskRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class TaskRepositoryImplementation implements TaskRepository {
     Map<Long, Task> tasks = new HashMap<>();
 

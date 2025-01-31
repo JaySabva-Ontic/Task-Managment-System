@@ -2,11 +2,13 @@ package org.jaysabva.service;
 
 import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Service
 public interface UserService {
     Map<String, String> registerUser(UserDto signUpInput);
     Optional<User> loginUser(UserDto loginInput);

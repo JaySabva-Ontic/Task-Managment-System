@@ -2,10 +2,12 @@ package org.jaysabva.repository;
 
 import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface UserRepository {
     void signUp(User user);
     boolean userExists(String username);

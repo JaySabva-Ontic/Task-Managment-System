@@ -4,39 +4,59 @@ import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 import org.jaysabva.service.Implementation.UserServiceImplementation;
 import org.jaysabva.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@RestController
+@RequestMapping("/user")
 public class UserController {
-    private final UserService userService = new UserServiceImplementation();
+    private final UserService userService;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-    public Map<String, String> registerUser(UserDto signUpInput) {
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello";
+    }
+
+    @PostMapping("/register")
+    public Map<String, String> registerUser(@RequestBody UserDto signUpInput) {
         return userService.registerUser(signUpInput);
     }
 
-    public Optional<User> loginUser(UserDto loginInput) {
+    @PostMapping("/login")
+    public Optional<User> loginUser(@RequestBody UserDto loginInput) {
         return userService.loginUser(loginInput);
     }
 
-    public Map<String, String> updateUser(String username, UserDto user) {
+    @PutMapping("/updateUser/{username}")
+    public Map<String, String> updateUser(@PathVariable String username, @RequestBody UserDto user) {
         return userService.updateUser(username, user);
     }
 
-    public Map<String, String> deleteUser(UserDto user) {
+    @PostMapping("/deleteUser")
+    public Map<String, String> deleteUser(@RequestBody UserDto user) {
         return userService.deleteUser(user);
     }
 
-    public Optional<User> getUser(String username) {
+    @GetMapping("/getUser/{username}")
+    public Optional<User> getUser(@PathVariable String username) {
         return userService.getUser(username);
     }
 
+    @GetMapping("/getAllUsers")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    public Map<String, String> deleteUserAdmin(String username) {
-        return userService.deleteUserAdmin(username);
+    @DeleteMapping("/deleteUserAdmin")
+    public Map<String, String> deleteUserAdmin(@RequestBody Map<String, String> usernameInput) {
+        return userService.deleteUserAdmin(usernameInput.get("username"));
     }
 }

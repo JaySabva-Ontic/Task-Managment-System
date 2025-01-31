@@ -4,15 +4,17 @@ import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.util.BCryptUtil;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class UserRepositoryImplementation implements UserRepository {
     Map<String, User> user_username = new HashMap<>();
     Map<String, User> user_phoneno = new HashMap<>();
 
     private static UserRepositoryImplementation instance = null;
-    private UserRepositoryImplementation() {
+    public UserRepositoryImplementation() {
     }
 
     public static UserRepositoryImplementation getInstance() {
@@ -65,8 +67,8 @@ public class UserRepositoryImplementation implements UserRepository {
             oldUser.setPassword(user.getPassword() != null ? BCryptUtil.hashPassword(user.getPassword()) : oldUser.getPassword());
             oldUser.setRole(user.getRole() != null ? user.getRole() : oldUser.getRole());
 
-            user_username.put(user.getUsername(), oldUser);
-            user_phoneno.put(user.getPhoneno(), oldUser);
+            user_username.put(oldUser.getUserName(), oldUser);
+            user_phoneno.put(oldUser.getPhoneno(), oldUser);
         }
     }
 
