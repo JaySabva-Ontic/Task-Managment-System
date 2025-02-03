@@ -8,8 +8,7 @@ import org.jaysabva.entity.BugTask;
 import org.jaysabva.entity.FeatureTask;
 import org.jaysabva.entity.ImprovementTask;
 import org.jaysabva.entity.Task;
-import org.jaysabva.repository.Implementation.TaskRepositoryImplementation;
-import org.jaysabva.repository.Implementation.UserRepositoryImplementation;
+//import org.jaysabva.repository.Implementation.UserRepositoryImplementation;
 import org.jaysabva.repository.TaskRepository;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.service.TaskService;
@@ -17,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskServiceImplementation implements TaskService {
@@ -37,7 +33,7 @@ public class TaskServiceImplementation implements TaskService {
     @Override
     public Map<String, String> addTask(TaskDto task) {
         try {
-            if (!userRepository.userExists(task.getAssignee())) {
+            if (!userRepository.existsUserByUserName(task.getAssignee())) {
                 return Map.of("message", "Assignee does not exist");
             }
 
@@ -53,7 +49,7 @@ public class TaskServiceImplementation implements TaskService {
                 return Map.of("message", "Invalid task type");
             }
 
-            taskRepository.addTask(newTask);
+            taskRepository.save(newTask);
 
             return Map.of("message", "Task added successfully");
         } catch (Exception e) {
@@ -64,10 +60,34 @@ public class TaskServiceImplementation implements TaskService {
     @Override
     public Map<String, String> updateTask(TaskDto task) {
         try {
-            if (!taskRepository.isTaskExists(task.getId())) {
+            if (!taskRepository.existsById(String.valueOf(task.getId()))) {
                 return Map.of("message", "Task does not exist");
             }
-            taskRepository.updateTask(task);
+
+            Task oldTask = taskRepository.findById(String.valueOf(task.getId())).get();
+            oldTask.setTitle(task.getTitle());
+            oldTask.setDescription(task.getDescription());
+            oldTask.setStatus(task.getStatus());
+            oldTask.setStartDate(task.getStartDate());
+            oldTask.setDueDate(task.getDueDate());
+            oldTask.setUpdatedAt(LocalDateTime.now());
+            oldTask.setAssignee(task.getAssignee());
+            oldTask.setCreatedBy(task.getCreatedBy());
+            oldTask.setStoryPoints(task.getStoryPoints());
+            if (Objects.equals(task.getTaskType(), "BUG")) {
+                ((BugTask) oldTask).setSeverity(((BugTaskDto) task).getSeverity());
+                ((BugTask) oldTask).setStepToReproduce(((BugTaskDto) task).getStepToReproduce());
+            } else if (task.getTaskType() == "FEATURE") {
+                ((FeatureTask) oldTask).setFeatureDescription(((FeatureTaskDto) task).getFeatureDescription());
+                ((FeatureTask) oldTask).setEstimatedEffort(((FeatureTaskDto) task).getEstimatedEffort());
+            } else if (task.getTaskType() == "IMPROVEMENT") {
+                ((ImprovementTask) oldTask).setProposedImprovement(((ImprovementTaskDto) task).getProposedImprovement());
+            } else {
+                System.out.println("Invalid task type");
+                return Map.of("message", "Invalid task type");
+            }
+
+            taskRepository.save(oldTask);
             return Map.of("message", "Task updated successfully");
         } catch (Exception e) {
             return Map.of("message", "Error updating task");
@@ -75,9 +95,9 @@ public class TaskServiceImplementation implements TaskService {
     }
 
     @Override
-    public Optional<Task> getTask(Long id) {
+    public Optional<Task> getTask(String id) {
         try {
-            return taskRepository.getTask(id);
+            return taskRepository.findTaskById(id);
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -86,20 +106,20 @@ public class TaskServiceImplementation implements TaskService {
     @Override
     public List<Task> getAllTasks() {
         try {
-            return taskRepository.getAllTasks();
+            return taskRepository.findAll();
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public Map<String, String> deleteTask(Long id) {
+    public Map<String, String> deleteTask(String id) {
         try {
-            if (!taskRepository.isTaskExists(id)) {
+            if (!taskRepository.existsById(id)) {
                 return Map.of("message", "Task does not exist");
             }
 
-            taskRepository.deleteTask(id);
+            taskRepository.deleteById(id);
             return Map.of("message", "Task deleted successfully");
         } catch (Exception e) {
             return Map.of("message", "Error deleting task");
@@ -109,7 +129,7 @@ public class TaskServiceImplementation implements TaskService {
     @Override
     public List<Task> getTasksByStoryPoints(Long storyPoints) {
         try {
-            return taskRepository.getTasksByStoryPoint(storyPoints);
+            return taskRepository.findByStoryPoints(storyPoints);
         } catch (Exception e) {
             return null;
         }
@@ -118,7 +138,16 @@ public class TaskServiceImplementation implements TaskService {
     @Override
     public Map<Long, List<Task>> getTaskByStoryPoints() {
         try {
-            return taskRepository.getTasksByStoryPoints();
+            List<Task> curr = taskRepository.findAll();
+            Map<Long, List<Task>> res = new HashMap<>();
+            for (Task task : curr) {
+                if (res.get(task.getStoryPoints()) == null) {
+                    res.put(task.getStoryPoints(), new ArrayList<>());
+                }
+                res.get(task.getStoryPoints()).add(task);
+            }
+
+            return res;
         } catch (Exception e) {
             return null;
         }
@@ -127,7 +156,16 @@ public class TaskServiceImplementation implements TaskService {
     @Override
     public Map<Long, List<Task>> getTasksByStoryPointsRange(Long start, Long end) {
         try {
-            return taskRepository.getTasksByStoryPointsRange(start, end);
+            List<Task> curr =  taskRepository.findByStoryPointsBetween(start - 1, end);
+            Map<Long, List<Task>> res = new HashMap<>();
+            for (Task task : curr) {
+                if (res.get(task.getStoryPoints()) == null) {
+                    res.put(task.getStoryPoints(), new ArrayList<>());
+                }
+                res.get(task.getStoryPoints()).add(task);
+            }
+
+            return res;
         } catch (Exception e) {
             return null;
         }
