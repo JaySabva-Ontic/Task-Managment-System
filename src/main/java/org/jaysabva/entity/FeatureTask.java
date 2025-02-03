@@ -1,8 +1,11 @@
 package org.jaysabva.entity;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+@Document(collection = "task")
 public class FeatureTask extends Task {
     private String featureDescription;
     private Duration estimatedEffort;

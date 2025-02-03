@@ -1,10 +1,12 @@
 package org.jaysabva.entity;
 
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document("Users")
 public class User {
-    private static final AtomicLong id = new AtomicLong(1);
-    private Long userId;
+    @Id
+    private String Id;
     private String userName;
     private String firstName;
     private String lastName;
@@ -16,21 +18,18 @@ public class User {
     }
 
     public User(String userName, String firstName, String lastName, String phoneno, String password, String role) {
-        this.userId = id.longValue();
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneno = phoneno;
         this.password = password;
         this.role = role;
-
-        incrId();
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "userId=" + Id +
                 ", userName='" + userName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -40,16 +39,12 @@ public class User {
                 '}';
     }
 
-    private static void incrId() {
-        id.incrementAndGet();
+    public String getUserId() {
+        return Id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserId(String userId) {
+        this.Id = userId;
     }
 
     public String getUserName() {

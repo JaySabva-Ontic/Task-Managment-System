@@ -1,13 +1,15 @@
 package org.jaysabva.entity;
 
-import java.time.LocalDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
+@Document(collection = "task")
 public abstract class Task {
-    private static AtomicLong taskId = new AtomicLong(1);
 
-    private Long id;
+    @Id
+    private String id;
     private String title;
     private String description;
     private Status status;
@@ -21,12 +23,9 @@ public abstract class Task {
     private Long storyPoints;
 
     public Task() {
-        this.id = taskId.longValue();
-        incrTaskId();
     }
 
     public Task(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType, Long storyPoints) {
-        this.id = taskId.longValue();
         this.title = title;
         this.description = description;
         this.status = getStatus(status);
@@ -39,7 +38,6 @@ public abstract class Task {
         this.taskType = TaskType.valueOf(taskType);
         this.storyPoints = storyPoints;
 
-        incrTaskId();
     }
 
     private static Status getStatus(String status) {
@@ -50,23 +48,12 @@ public abstract class Task {
         }
     }
 
-    private static void incrTaskId() {
-        taskId.incrementAndGet();
-    }
 
-    public static Long getTaskId() {
-        return taskId.longValue();
-    }
-
-    public static void setTaskId(Long taskId) {
-        Task.taskId = new AtomicLong(taskId);
-    }
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

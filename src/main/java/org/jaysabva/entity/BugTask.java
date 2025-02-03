@@ -1,10 +1,12 @@
 package org.jaysabva.entity;
 
-import java.time.LocalDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Document(collection = "task")
 public class BugTask extends Task {
     private String severity;
     private List<String> stepToReproduce = new ArrayList<>();

@@ -2,10 +2,7 @@ package org.jaysabva.dto;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +18,7 @@ import java.time.LocalDateTime;
         @JsonSubTypes.Type(value = ImprovementTaskDto.class, name = "IMPROVEMENT")
 })
 public abstract class TaskDto {
-    private Long id;
+    private String id;
     private String title;
     private String description;
     private String status;
@@ -34,11 +31,11 @@ public abstract class TaskDto {
     private String taskType;
     private Long storyPoints;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

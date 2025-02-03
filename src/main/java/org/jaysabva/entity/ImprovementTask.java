@@ -1,8 +1,10 @@
 package org.jaysabva.entity;
 
-import java.time.LocalDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 
+@Document(collection = "task")
 public class ImprovementTask extends Task {
     private String proposedImprovement;
 
