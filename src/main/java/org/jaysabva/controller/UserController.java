@@ -40,10 +40,10 @@ public class UserController {
         return userService.updateUser(username, user);
     }
 
-    @PostMapping("/deleteUser")
-    public Map<String, String> deleteUser(@RequestBody UserDto user) {
-        return userService.deleteUser(user);
-    }
+//    @PostMapping("/deleteUser")
+//    public Map<String, String> deleteUser(@RequestBody UserDto user) {
+//        return userService.deleteUser(user);
+//    }
 
     @GetMapping("/getUser/{username}")
     public Optional<User> getUser(@PathVariable String username) {
