@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface TaskService {
     Map<String, String> addTask(TaskDto task);
     Map<String, String> updateTask(TaskDto task);
-    Optional<Task> getTask(Long id);
+    Optional<Task> getTask(String id);
     List<Task> getAllTasks();
-    Map<String, String> deleteTask(Long id);
+    Map<String, String> deleteTask(String id);
     List<Task> getTasksByStoryPoints(Long storyPoints);
     Map<Long, List<Task>> getTaskByStoryPoints();
     Map<Long, List<Task>> getTasksByStoryPointsRange(Long start, Long end);
