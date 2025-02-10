@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
         @JsonSubTypes.Type(value = FeatureTaskDto.class, name = "FEATURE"),
         @JsonSubTypes.Type(value = ImprovementTaskDto.class, name = "IMPROVEMENT")
 })
-public abstract class TaskDto {
-    private String id;
+public class TaskDto {
+    private Long id;
     private String title;
     private String description;
     private String status;
@@ -31,11 +31,11 @@ public abstract class TaskDto {
     private String taskType;
     private Long storyPoints;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

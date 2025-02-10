@@ -1,36 +1,42 @@
-//package org.jaysabva.repository.Implementation;
-//
-//import org.jaysabva.dto.BugTaskDto;
-//import org.jaysabva.dto.FeatureTaskDto;
-//import org.jaysabva.dto.ImprovementTaskDto;
-//import org.jaysabva.dto.TaskDto;
-//import org.jaysabva.entity.BugTask;
-//import org.jaysabva.entity.FeatureTask;
-//import org.jaysabva.entity.ImprovementTask;
-//import org.jaysabva.entity.Task;
-//import org.jaysabva.repository.TaskRepository;
-//import org.springframework.stereotype.Repository;
-//
-//import java.time.LocalDateTime;
-//import java.util.*;
-//
-//@Repository
-//public class TaskRepositoryImplementation implements TaskRepository {
-//    List<Task> tasks = new ArrayList<>();
-//    SortedMap<Long, Long> taskIdToIdx = new TreeMap<>();
-//    SortedMap<Long, Set<Long>> storyPointsToTasks = new TreeMap<>();
-//
-//    private static TaskRepositoryImplementation instance = null;
-//    private TaskRepositoryImplementation() {
-//    }
-//
-//    public static TaskRepositoryImplementation getInstance() {
-//        if (instance == null) {
-//            return new TaskRepositoryImplementation();
-//        }
-//        return instance;
-//    }
-//
+package org.jaysabva.repository.Implementation;
+
+import org.jaysabva.dto.BugTaskDto;
+import org.jaysabva.dto.FeatureTaskDto;
+import org.jaysabva.dto.ImprovementTaskDto;
+import org.jaysabva.dto.TaskDto;
+import org.jaysabva.entity.BugTask;
+import org.jaysabva.entity.FeatureTask;
+import org.jaysabva.entity.ImprovementTask;
+import org.jaysabva.entity.Task;
+import org.jaysabva.repository.TaskRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
+
+@Repository
+public class TaskRepositoryImplementation implements TaskRepository {
+    List<Task> tasks = new ArrayList<>();
+    SortedMap<Long, Long> taskIdToIdx = new TreeMap<>();
+    SortedMap<Long, Set<Long>> storyPointsToTasks = new TreeMap<>();
+
+    private static TaskRepositoryImplementation instance = null;
+    public TaskRepositoryImplementation() {
+    }
+
+    public static TaskRepositoryImplementation getInstance() {
+        if (instance == null) {
+            return new TaskRepositoryImplementation();
+        }
+        return instance;
+    }
+
 //    @Override
 //    public void addTask(Task task) {
 //        tasks.add(task);
@@ -154,4 +160,164 @@
 //        }
 //        return tasksByStoryPoints;
 //    }
-//}
+
+    @Override
+    public Optional<Task> findTaskById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Task> findByStoryPoints(Long storyPoints) {
+        return List.of();
+    }
+
+    @Override
+    public List<Task> findAndGroupByStoryPoints() {
+        return List.of();
+    }
+
+    @Override
+    public List<Task> findByStoryPointsBetween(Long start, Long end) {
+        return List.of();
+    }
+
+    @Override
+    public List<Task> findAllAndGroupByStoryPoints() {
+        return List.of();
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return false;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
+    @Override
+    public Optional<Task> findById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Task> findByTaskType(String taskType) {
+        return List.of();
+    }
+
+    @Override
+    public <S extends Task> S insert(S entity) {
+        return null;
+    }
+
+    @Override
+    public <S extends Task> List<S> insert(Iterable<S> entities) {
+        return List.of();
+    }
+
+    @Override
+    public <S extends Task> Optional<S> findOne(Example<S> example) {
+        return Optional.empty();
+    }
+
+    @Override
+    public <S extends Task> List<S> findAll(Example<S> example) {
+        return List.of();
+    }
+
+    @Override
+    public <S extends Task> List<S> findAll(Example<S> example, Sort sort) {
+        return List.of();
+    }
+
+    @Override
+    public <S extends Task> Page<S> findAll(Example<S> example, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public <S extends Task> long count(Example<S> example) {
+        return 0;
+    }
+
+    @Override
+    public <S extends Task> boolean exists(Example<S> example) {
+        return false;
+    }
+
+    @Override
+    public <S extends Task, R> R findBy(Example<S> example, Function<FetchableFluentQuery<S>, R> queryFunction) {
+        return null;
+    }
+
+    @Override
+    public <S extends Task> S save(S entity) {
+        return null;
+    }
+
+    @Override
+    public <S extends Task> List<S> saveAll(Iterable<S> entities) {
+        return List.of();
+    }
+
+    @Override
+    public Optional<Task> findById(String key) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsById(String key) {
+        return false;
+    }
+
+    @Override
+    public List<Task> findAll() {
+        return List.of();
+    }
+
+    @Override
+    public List<Task> findAllById(Iterable<String> strings) {
+        return List.of();
+    }
+
+    @Override
+    public long count() {
+        return 0;
+    }
+
+    @Override
+    public void deleteById(String key) {
+
+    }
+
+    @Override
+    public void delete(Task entity) {
+
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends String> strings) {
+
+    }
+
+    @Override
+    public void deleteAll(Iterable<? extends Task> entities) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
+    }
+
+    @Override
+    public List<Task> findAll(Sort sort) {
+        return List.of();
+    }
+
+    @Override
+    public Page<Task> findAll(Pageable pageable) {
+        return null;
+    }
+}

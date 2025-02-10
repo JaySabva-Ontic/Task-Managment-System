@@ -9,14 +9,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
+public interface UserRepository {
     boolean existsUserByUserName(String userName);
 
     boolean existsUserByPhoneno(String phoneno);
 
-    User findByUserName(String userName);
+    Optional<User> findByUserName(String userName);
 
     void deleteByUserName(String username);
 
-    User findByUserNameAndPassword(String username, String password);
+    Optional<User> findByUserNameAndPassword(String username, String password);
+
+    User save(User user);
+
+    List<User> findAll();
 }
