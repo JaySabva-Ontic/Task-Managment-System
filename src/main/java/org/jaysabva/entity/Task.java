@@ -1,15 +1,17 @@
 package org.jaysabva.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "task")
-public abstract class Task {
+@Document(collection = "tasks")
+public class Task {
 
     @Id
-    private String id;
+    private Long id;
     private String title;
     private String description;
     private Status status;
@@ -19,7 +21,11 @@ public abstract class Task {
     private LocalDateTime updatedAt;
     private String assignee;
     private String createdBy;
+
+    @Indexed
     private TaskType taskType;
+
+    @Indexed
     private Long storyPoints;
 
     public Task() {
@@ -49,11 +55,11 @@ public abstract class Task {
     }
 
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

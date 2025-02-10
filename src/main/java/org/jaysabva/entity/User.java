@@ -1,12 +1,15 @@
 package org.jaysabva.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Users")
+@Document("users")
 public class User {
     @Id
     private String Id;
+
+    @Indexed(unique = true)
     private String userName;
     private String firstName;
     private String lastName;
