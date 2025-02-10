@@ -12,6 +12,7 @@ import org.jaysabva.entity.Task;
 import org.jaysabva.repository.TaskRepository;
 import org.jaysabva.repository.UserRepository;
 import org.jaysabva.service.TaskService;
+import org.jaysabva.service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,13 @@ public class TaskServiceImplementation implements TaskService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
-    public TaskServiceImplementation(TaskRepository taskRepository, UserRepository userRepository) {
+    public TaskServiceImplementation(TaskRepository taskRepository, UserRepository userRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class TaskServiceImplementation implements TaskService {
                 return Map.of("message", "Invalid task type");
             }
 
+            newTask.setId(sequenceGeneratorService.generateSequence("taskCounter"));
             taskRepository.save(newTask);
 
             return Map.of("message", "Task added successfully");
@@ -64,30 +68,32 @@ public class TaskServiceImplementation implements TaskService {
                 return Map.of("message", "Task does not exist");
             }
 
-            Task oldTask = taskRepository.findById(String.valueOf(task.getId())).get();
-            oldTask.setTitle(task.getTitle());
-            oldTask.setDescription(task.getDescription());
-            oldTask.setStatus(task.getStatus());
-            oldTask.setStartDate(task.getStartDate());
-            oldTask.setDueDate(task.getDueDate());
-            oldTask.setUpdatedAt(LocalDateTime.now());
-            oldTask.setAssignee(task.getAssignee());
-            oldTask.setCreatedBy(task.getCreatedBy());
-            oldTask.setStoryPoints(task.getStoryPoints());
-            if (Objects.equals(task.getTaskType(), "BUG")) {
-                ((BugTask) oldTask).setSeverity(((BugTaskDto) task).getSeverity());
-                ((BugTask) oldTask).setStepToReproduce(((BugTaskDto) task).getStepToReproduce());
-            } else if (task.getTaskType() == "FEATURE") {
-                ((FeatureTask) oldTask).setFeatureDescription(((FeatureTaskDto) task).getFeatureDescription());
-                ((FeatureTask) oldTask).setEstimatedEffort(((FeatureTaskDto) task).getEstimatedEffort());
-            } else if (task.getTaskType() == "IMPROVEMENT") {
-                ((ImprovementTask) oldTask).setProposedImprovement(((ImprovementTaskDto) task).getProposedImprovement());
-            } else {
-                System.out.println("Invalid task type");
-                return Map.of("message", "Invalid task type");
-            }
+            synchronized (task.getId()) {
+                Task oldTask = taskRepository.findById(task.getId()).get();
+                oldTask.setTitle(task.getTitle());
+                oldTask.setDescription(task.getDescription());
+                oldTask.setStatus(task.getStatus());
+                oldTask.setStartDate(task.getStartDate());
+                oldTask.setDueDate(task.getDueDate());
+                oldTask.setUpdatedAt(LocalDateTime.now());
+                oldTask.setAssignee(task.getAssignee());
+                oldTask.setCreatedBy(task.getCreatedBy());
+                oldTask.setStoryPoints(task.getStoryPoints());
+                if (Objects.equals(task.getTaskType(), "BUG")) {
+                    ((BugTask) oldTask).setSeverity(((BugTaskDto) task).getSeverity());
+                    ((BugTask) oldTask).setStepToReproduce(((BugTaskDto) task).getStepToReproduce());
+                } else if (task.getTaskType() == "FEATURE") {
+                    ((FeatureTask) oldTask).setFeatureDescription(((FeatureTaskDto) task).getFeatureDescription());
+                    ((FeatureTask) oldTask).setEstimatedEffort(((FeatureTaskDto) task).getEstimatedEffort());
+                } else if (task.getTaskType() == "IMPROVEMENT") {
+                    ((ImprovementTask) oldTask).setProposedImprovement(((ImprovementTaskDto) task).getProposedImprovement());
+                } else {
+                    System.out.println("Invalid task type");
+                    return Map.of("message", "Invalid task type");
+                }
 
-            taskRepository.save(oldTask);
+                taskRepository.save(oldTask);
+            }
             return Map.of("message", "Task updated successfully");
         } catch (Exception e) {
             return Map.of("message", "Error updating task");
@@ -95,7 +101,7 @@ public class TaskServiceImplementation implements TaskService {
     }
 
     @Override
-    public Optional<Task> getTask(String id) {
+    public Optional<Task> getTask(Long id) {
         try {
             return taskRepository.findTaskById(id);
         } catch (Exception e) {
@@ -113,7 +119,7 @@ public class TaskServiceImplementation implements TaskService {
     }
 
     @Override
-    public Map<String, String> deleteTask(String id) {
+    public Map<String, String> deleteTask(Long id) {
         try {
             if (!taskRepository.existsById(id)) {
                 return Map.of("message", "Task does not exist");
@@ -166,6 +172,15 @@ public class TaskServiceImplementation implements TaskService {
             }
 
             return res;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Task> getTaskByTaskType(String taskType) {
+        try {
+            return taskRepository.findByTaskType(taskType);
         } catch (Exception e) {
             return null;
         }
