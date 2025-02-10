@@ -36,7 +36,7 @@ public class TaskController {
     }
 
     @GetMapping("/getTask/{taskId}")
-    public Optional<Task> getTask(@PathVariable String taskId) {
+    public Optional<Task> getTask(@PathVariable Long taskId) {
         return taskService.getTask(taskId);
     }
 
@@ -46,7 +46,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/deleteTask/{taskId}")
-    public Map<String, String> deleteTask(@PathVariable String taskId) {
+    public Map<String, String> deleteTask(@PathVariable Long taskId) {
         return taskService.deleteTask(taskId);
     }
 
@@ -63,5 +63,10 @@ public class TaskController {
     @GetMapping("/getTasksByStoryPointsRange/")
     public Map<Long, List<Task>> getTasksByStoryPointsRange(@RequestParam("start") Long start, @RequestParam("end") Long end) {
         return taskService.getTasksByStoryPointsRange(start, end);
+    }
+
+    @GetMapping("/getTaskByTaskType/{taskType}")
+    public List<Task> getTaskByTaskType(@PathVariable String taskType) {
+        return taskService.getTaskByTaskType(taskType);
     }
 }
