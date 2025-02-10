@@ -1,5 +1,6 @@
 package org.jaysabva.service.Implementation;
 
+import lombok.Synchronized;
 import org.jaysabva.dto.UserDto;
 import org.jaysabva.entity.User;
 import org.jaysabva.repository.UserRepository;
@@ -44,9 +45,9 @@ public class UserServiceImplementation implements UserService {
     @Override
     public Optional<User> loginUser(UserDto loginInput) {
         try {
-            User user = userRepository.findByUserName(loginInput.getUsername());
-            if (BCryptUtil.checkPassword(loginInput.getPassword(), user.getPassword())) {
-                return Optional.ofNullable(user);
+            Optional<User> user = userRepository.findByUserName(loginInput.getUsername());
+            if (BCryptUtil.checkPassword(loginInput.getPassword(), user.get().getPassword())) {
+                return Optional.ofNullable(user.get());
             } else {
                 return Optional.empty();
             }
@@ -65,18 +66,22 @@ public class UserServiceImplementation implements UserService {
                 return Map.of("message", "Username already exists");
             }
 
-            User oldUser = userRepository.findByUserName(username);
-            oldUser.setUserName(user.getUsername());
-            oldUser.setFirstName(user.getFirstName());
-            oldUser.setLastName(user.getLastName());
-            oldUser.setRole(user.getRole());
-            oldUser.setPhoneno(user.getPhoneno());
-            oldUser.setPassword(BCryptUtil.hashPassword(user.getPassword()));
+            synchronized (username) {
+                System.out.println("Updating user with username: " + username);
+                Optional<User> oldUserOp = userRepository.findByUserName(username);
+                User oldUser = oldUserOp.get();
+                oldUser.setUserName(user.getUsername() != null ? user.getUsername() : oldUser.getUserName());
+                oldUser.setFirstName(user.getFirstName() != null ? user.getFirstName() : oldUser.getFirstName());
+                oldUser.setLastName(user.getLastName() != null ? user.getLastName() : oldUser.getLastName());
+                oldUser.setPhoneno(user.getPhoneno() != null ? user.getPhoneno() : oldUser.getPhoneno());
+                oldUser.setPassword(user.getPassword() != null ? BCryptUtil.hashPassword(user.getPassword()) : oldUser.getPassword());
+                oldUser.setRole(user.getRole() != null ? user.getRole() : oldUser.getRole());
 
 
-            userRepository.save(oldUser);
-
-            return Map.of("message", "User updated successfully");
+                userRepository.save(oldUser);
+                System.out.println("finished Updating user with username: " + username);
+                return Map.of("message", "User updated successfully");
+            }
         } catch (Exception e) {
             System.out.println(e);
             return Map.of("message", "Error updating user");
@@ -139,7 +144,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public Optional<User> getUser(String username) {
         try {
-            return Optional.ofNullable(userRepository.findByUserName(username));
+            return Optional.of(userRepository.findByUserName(username).get());
         } catch (Exception e) {
             return Optional.empty();
         }
