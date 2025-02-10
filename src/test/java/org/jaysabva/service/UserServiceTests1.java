@@ -4,19 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jaysabva.dto.BugTaskDto;
-import org.jaysabva.dto.TaskDto;
 import org.jaysabva.dto.UserDto;
-import org.jaysabva.entity.Task;
 import org.jaysabva.entity.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +19,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class UserServiceTests {
+public class UserServiceTests1 {
 
     @Autowired
     private UserService userService;
