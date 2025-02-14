@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository {
+public interface UserRepository extends MongoRepository<User, String> {
     boolean existsUserByUserName(String userName);
 
     boolean existsUserByPhoneno(String phoneno);

@@ -32,7 +32,7 @@ public class UserServiceImplementation implements UserService {
                 return Map.of("message", "Please fill in all fields");
             } else {
 
-                User user = new User(userDto.getUsername(), userDto.getFirstName(), userDto.getLastName(),  userDto.getPhoneno(), BCryptUtil.hashPassword(userDto.getPassword()), userDto.getRole());
+                User user = new User(userDto.getUsername(), userDto.getFirstName(), userDto.getLastName(),  userDto.getPhoneno(), BCryptUtil.hashPassword(userDto.getPassword()), userDto.getRole(), userDto.getDynamicField());
 
                 userRepository.save(user);
                 return Map.of("message", "User registered successfully");
@@ -76,7 +76,7 @@ public class UserServiceImplementation implements UserService {
                 oldUser.setPhoneno(user.getPhoneno() != null ? user.getPhoneno() : oldUser.getPhoneno());
                 oldUser.setPassword(user.getPassword() != null ? BCryptUtil.hashPassword(user.getPassword()) : oldUser.getPassword());
                 oldUser.setRole(user.getRole() != null ? user.getRole() : oldUser.getRole());
-
+                oldUser.setDynamicField(user.getDynamicField() != null ? user.getDynamicField() : oldUser.getDynamicField());
 
                 userRepository.save(oldUser);
                 System.out.println("finished Updating user with username: " + username);
