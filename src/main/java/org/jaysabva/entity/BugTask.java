@@ -5,8 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-@Document(collection = "task")
+@Document(collection = "tasks")
 public class BugTask extends Task {
     private String severity;
     private List<String> stepToReproduce = new ArrayList<>();
@@ -15,8 +16,8 @@ public class BugTask extends Task {
         super();
     }
 
-    public BugTask(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String severity, List<String> stepToReproduce, String taskType, Long storyPoints) {
-        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints);
+    public BugTask(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String severity, List<String> stepToReproduce, String taskType, Long storyPoints, Map<Long, Object> dynamicField) {
+        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints, dynamicField);
         this.severity = severity;
         this.stepToReproduce = stepToReproduce;
     }

@@ -4,8 +4,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 
-@Document(collection = "task")
+@Document(collection = "tasks")
 public class FeatureTask extends Task {
     private String featureDescription;
     private Duration estimatedEffort;
@@ -14,8 +15,8 @@ public class FeatureTask extends Task {
         super();
     }
 
-    public FeatureTask(String title, String description, String status,LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String featureDescription, Duration estimatedEffort, String taskType, Long storyPoints) {
-        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints);
+    public FeatureTask(String title, String description, String status,LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String featureDescription, Duration estimatedEffort, String taskType, Long storyPoints, Map<Long, Object> dynamicField) {
+        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints, dynamicField);
         this.featureDescription = featureDescription;
         this.estimatedEffort = estimatedEffort;
     }

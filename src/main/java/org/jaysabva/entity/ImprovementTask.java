@@ -3,8 +3,9 @@ package org.jaysabva.entity;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
-@Document(collection = "task")
+@Document(collection = "tasks")
 public class ImprovementTask extends Task {
     private String proposedImprovement;
 
@@ -12,8 +13,8 @@ public class ImprovementTask extends Task {
         super();
     }
 
-    public ImprovementTask(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String proposedImprovement, String taskType, Long storyPoints) {
-        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints);
+    public ImprovementTask(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String proposedImprovement, String taskType, Long storyPoints, Map<Long, Object> dynamicField) {
+        super(title, description, status, startDate, dueDate, createdAt, updatedAt, assignee, createdBy, taskType, storyPoints, dynamicField);
         this.proposedImprovement = proposedImprovement;
     }
 
