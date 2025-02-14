@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Map;
+
 @Document("users")
 public class User {
     @Id
@@ -17,16 +19,18 @@ public class User {
     private String password;
     private String role;
 
+    private Map<String, Object> dynamicField;
     public User() {
     }
 
-    public User(String userName, String firstName, String lastName, String phoneno, String password, String role) {
+    public User(String userName, String firstName, String lastName, String phoneno, String password, String role, Map<String, Object> dynamicField) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneno = phoneno;
         this.password = password;
         this.role = role;
+        this.dynamicField = dynamicField;
     }
 
     @Override
@@ -96,5 +100,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Map<String, Object> getDynamicField() {
+        return dynamicField;
+    }
+
+    public void setDynamicField(Map<String, Object> dynamicField) {
+        this.dynamicField = dynamicField;
     }
 }
