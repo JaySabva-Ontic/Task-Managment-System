@@ -1,24 +1,44 @@
 package org.jaysabva.entity;
 
+import org.jaysabva.util.IgnoreMongo;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Dynamic;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Document(collection = "tasks")
+@org.springframework.data.elasticsearch.annotations.Document(indexName = "tasks")
 public class Task {
 
     @Id
     private Long id;
+
+    @Field(type = FieldType.Text)
     private String title;
+
+    @Field(type = FieldType.Text)
     private String description;
+
     private Status status;
+
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private LocalDateTime startDate;
+
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private LocalDateTime dueDate;
+
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private LocalDateTime createdAt;
+
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private LocalDateTime updatedAt;
+
     private String assignee;
     private String createdBy;
 
@@ -28,10 +48,19 @@ public class Task {
     @Indexed
     private Long storyPoints;
 
+    @IgnoreMongo
+    private String elasticRelated;
+
+    private NestedField nestedField;
+
+    @Field(type = FieldType.Object, dynamic = Dynamic.STRICT)
+    private Map<Long, Object> dynamicField;
+
+    private Map<String, Object> nestedDynamicField;
     public Task() {
     }
 
-    public Task(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType, Long storyPoints) {
+    public Task(String title, String description, String status, LocalDateTime startDate, LocalDateTime dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, String assignee, String createdBy, String taskType, Long storyPoints, Map<Long, Object> dynamicField) {
         this.title = title;
         this.description = description;
         this.status = getStatus(status);
@@ -43,7 +72,7 @@ public class Task {
         this.createdBy = createdBy;
         this.taskType = TaskType.valueOf(taskType);
         this.storyPoints = storyPoints;
-
+        this.dynamicField = dynamicField;
     }
 
     private static Status getStatus(String status) {
@@ -164,6 +193,38 @@ public class Task {
         System.out.println("Updated At: " + getUpdatedAt());
         System.out.println("Assignee: " + getAssignee());
         System.out.println("Created By: " + getCreatedBy());
+    }
+
+    public String getElasticRelated() {
+        return elasticRelated;
+    }
+
+    public void setElasticRelated(String elasticRelated) {
+        this.elasticRelated = elasticRelated;
+    }
+
+    public NestedField getNestedField() {
+        return nestedField;
+    }
+
+    public void setNestedField(NestedField nestedField) {
+        this.nestedField = nestedField;
+    }
+
+    public Map<Long, Object> getDynamicField() {
+        return dynamicField;
+    }
+
+    public void setDynamicField(Map<Long, Object> dynamicField) {
+        this.dynamicField = dynamicField;
+    }
+
+    public Map<String, Object> getNestedDynamicField() {
+        return nestedDynamicField;
+    }
+
+    public void setNestedDynamicField(Map<String, Object> nestedDynamicField) {
+        this.nestedDynamicField = nestedDynamicField;
     }
 }
 
