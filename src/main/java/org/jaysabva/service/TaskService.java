@@ -1,5 +1,6 @@
 package org.jaysabva.service;
 
+import org.jaysabva.dto.CustomFieldDto;
 import org.jaysabva.dto.TaskDto;
 import org.jaysabva.entity.Task;
 import org.springframework.stereotype.Service;
@@ -19,4 +20,12 @@ public interface TaskService {
     Map<Long, List<Task>> getTaskByStoryPoints();
     Map<Long, List<Task>> getTasksByStoryPointsRange(Long start, Long end);
     List<Task> getTaskByTaskType(String taskType);
+
+    List<Task> searchTask(String search);
+
+    Map<String, String> addCustomField(CustomFieldDto customField);
+
+    Map<String, String> updateCustomField(Long id, String customField);
+
+    List<Task> searchTaskByDateRange(String startDate, String endDate);
 }

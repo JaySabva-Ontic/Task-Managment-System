@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 
 @JsonTypeInfo(
@@ -30,6 +31,8 @@ public class TaskDto {
     private String createdBy;
     private String taskType;
     private Long storyPoints;
+    private Map<Long, Object> dynamicField;
+    private Map<String, Object> nestedDynamicField;
 
     public Long getId() {
         return id;
@@ -125,5 +128,21 @@ public class TaskDto {
 
     public void setStoryPoints(Long storyPoints) {
         this.storyPoints = storyPoints;
+    }
+
+    public Map<Long, Object> getDynamicField() {
+        return dynamicField;
+    }
+
+    public void setDynamicField(Map<Long, Object> dynamicField) {
+        this.dynamicField = dynamicField;
+    }
+
+    public Map<String, Object> getNestedDynamicField() {
+        return nestedDynamicField;
+    }
+
+    public void setNestedDynamicField(Map<String, Object> nestedDynamicField) {
+        this.nestedDynamicField = nestedDynamicField;
     }
 }

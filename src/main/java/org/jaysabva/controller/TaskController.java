@@ -1,5 +1,6 @@
 package org.jaysabva.controller;
 
+import org.jaysabva.dto.CustomFieldDto;
 import org.jaysabva.dto.TaskDto;
 import org.jaysabva.entity.Task;
 import org.jaysabva.service.Implementation.TaskServiceImplementation;
@@ -68,5 +69,25 @@ public class TaskController {
     @GetMapping("/getTaskByTaskType/{taskType}")
     public List<Task> getTaskByTaskType(@PathVariable String taskType) {
         return taskService.getTaskByTaskType(taskType);
+    }
+
+    @GetMapping("/searchTask/")
+    public List<Task> searchTask(@RequestParam String search) {
+        return taskService.searchTask(search);
+    }
+
+    @PostMapping("/addCustomField")
+    public Map<String, String> addCustomField(@RequestBody CustomFieldDto customField) {
+        return taskService.addCustomField(customField);
+    }
+
+    @PostMapping("/updateCustomField/{id}")
+    public Map<String, String> updateCustomField(@PathVariable Long id, @RequestBody String status) {
+        return taskService.updateCustomField(id, status);
+    }
+
+    @GetMapping("/searchTaskByDateRange")
+    public List<Task> searchTaskByDateRange(@RequestParam ("startDate") String startDate, @RequestParam("endDate") String endDate) {
+        return taskService.searchTaskByDateRange(startDate, endDate);
     }
 }
