@@ -15,6 +15,7 @@ import org.jaysabva.service.TaskService;
 import org.jaysabva.service.SequenceGeneratorService;
 import org.jaysabva.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.RefreshPolicy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,7 +40,7 @@ public class TaskServiceImplementation implements TaskService {
     }
 
     @Override
-    public Map<String, String> addTask(TaskDto task) {
+    public Map<String, String> addTask(TaskDto task, boolean refresh) {
         try {
             if (!userRepository.existsUserByUserName(task.getAssignee())) {
                 return Map.of("message", "Assignee does not exist");
@@ -68,7 +69,7 @@ public class TaskServiceImplementation implements TaskService {
             newTask.setNestedDynamicField(task.getNestedDynamicField());
 
             taskRepository.save(newTask);
-            taskESRepository.save(newTask);
+            taskESRepository.save(newTask, (refresh) ? RefreshPolicy.IMMEDIATE : RefreshPolicy.NONE);
 
             return Map.of("message", "Task added successfully");
         } catch (Exception e) {
@@ -177,24 +178,42 @@ public class TaskServiceImplementation implements TaskService {
         }
     }
 
+//    @Override
+//    @Deprecated
+//    public Map<Long, List<Task>> getTasksByStoryPointsRange(Long start, Long end) {
+//        try {
+//            List<Task> curr =  taskRepository.findByStoryPointsBetween(start - 1, end);
+//            Map<Long, List<Task>> res = new HashMap<>();
+//            for (Task task : curr) {
+//                if (res.get(task.getStoryPoints()) == null) {
+//                    res.put(task.getStoryPoints(), new ArrayList<>());
+//                }
+//                res.get(task.getStoryPoints()).add(task);
+//            }
+//
+//            return res;
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
+
     @Override
     public Map<Long, List<Task>> getTasksByStoryPointsRange(Long start, Long end) {
         try {
-            List<Task> curr =  taskRepository.findByStoryPointsBetween(start - 1, end);
-            Map<Long, List<Task>> res = new HashMap<>();
-            for (Task task : curr) {
-                if (res.get(task.getStoryPoints()) == null) {
-                    res.put(task.getStoryPoints(), new ArrayList<>());
+            List<Task> res = taskESRepository.findTasksByStoryPointsBetween(start, end);
+            Map<Long, List<Task>> map = new HashMap<>();
+            for (Task task : res) {
+                if (map.get(task.getStoryPoints()) == null) {
+                    map.put(task.getStoryPoints(), new ArrayList<>());
                 }
-                res.get(task.getStoryPoints()).add(task);
+                map.get(task.getStoryPoints()).add(task);
             }
 
-            return res;
+            return map;
         } catch (Exception e) {
             return null;
         }
     }
-
     @Override
     public List<Task> getTaskByTaskType(String taskType) {
         try {

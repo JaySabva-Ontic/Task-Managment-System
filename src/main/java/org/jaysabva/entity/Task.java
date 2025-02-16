@@ -2,10 +2,7 @@ package org.jaysabva.entity;
 
 import org.jaysabva.util.IgnoreMongo;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Dynamic;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,6 +11,7 @@ import java.util.Map;
 
 @Document(collection = "tasks")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "tasks")
+@Setting(refreshInterval = "30s")
 public class Task {
 
     @Id

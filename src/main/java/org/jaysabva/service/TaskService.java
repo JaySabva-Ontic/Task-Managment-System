@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public interface TaskService {
-    Map<String, String> addTask(TaskDto task);
+    Map<String, String> addTask(TaskDto task, boolean refresh);
     Map<String, String> updateTask(TaskDto task);
     Optional<Task> getTask(Long id);
     List<Task> getAllTasks();

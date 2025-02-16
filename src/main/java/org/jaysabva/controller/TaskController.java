@@ -27,8 +27,8 @@ public class TaskController {
     }
 
     @PostMapping("/addTask")
-    public Map<String, String> addTask(@RequestBody TaskDto task) {
-        return taskService.addTask(task);
+    public Map<String, String> addTask(@RequestBody TaskDto task, @RequestParam boolean refresh) {
+        return taskService.addTask(task, refresh);
     }
 
     @PutMapping("/updateTask")

@@ -42,4 +42,6 @@ public interface TaskESRepository extends ElasticsearchRepository<Task, Long> {
     }
     """)
     List<Task> findTaskByDateRange(String startDate, String endDate);
+
+    List<Task> findTasksByStoryPointsBetween(Long storyPointsAfter, Long storyPointsBefore);
 }
